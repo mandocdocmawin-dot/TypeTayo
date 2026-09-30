@@ -1,0 +1,122 @@
+.page {
+  display: grid;
+  gap: var(--space-5);
+  max-width: 720px;
+  margin: 0 auto;
+  padding: var(--space-6) var(--space-4);
+  color: var(--text);
+  font-family: var(--font-ui);
+}
+
+.head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.title {
+  margin: 0;
+  font-size: var(--fs-xl);
+  font-weight: var(--fw-black);
+}
+
+.badge {
+  --lvl: var(--cyan);
+  padding: var(--space-1) var(--space-4);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-bold);
+  text-transform: uppercase;
+  color: var(--on-accent);
+  background: var(--lvl);
+  border-radius: var(--radius-pill);
+}
+.badge[data-level='easy'] { --lvl: var(--level-easy); }
+.badge[data-level='medium'] { --lvl: var(--level-medium); }
+.badge[data-level='hard'] { --lvl: var(--level-hard); }
+
+.timerWrap {
+  position: relative; /* BonusPopup positions itself against this */
+}
+
+.hint {
+  min-height: 3rem;
+  margin: 0;
+  text-align: center;
+  color: var(--text-muted);
+}
+
+.count {
+  font-family: var(--font-mono);
+  font-size: var(--fs-2xl);
+  font-weight: var(--fw-black);
+  color: var(--cyan);
+}
+
+.stats {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+  gap: var(--space-3);
+  margin: 0;
+  padding: 0;
+  list-style: none;
+  text-align: center;
+  color: var(--text-muted);
+  font-size: var(--fs-sm);
+}
+.stats li {
+  padding: var(--space-3);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+.stats b {
+  display: block;
+  font-family: var(--font-mono);
+  font-size: var(--fs-lg);
+  color: var(--text);
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: var(--space-2);
+  justify-content: center;
+}
+
+.btn {
+  padding: var(--space-2) var(--space-5);
+  font: inherit;
+  font-weight: var(--fw-bold);
+  color: var(--text);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  cursor: pointer;
+  transition: opacity var(--dur-fast) var(--ease);
+}
+.btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.btn:focus-visible { outline: 2px solid var(--cyan); outline-offset: 2px; }
+
+.primary {
+  color: var(--on-accent);
+  background: var(--cyan);
+  border-color: var(--cyan);
+}
+
+.result {
+  margin: 0;
+  padding: var(--space-4);
+  overflow-x: auto;
+  font-family: var(--font-mono);
+  font-size: var(--fs-xs);
+  background: var(--bg-elevated);
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+}
+
+.note {
+  margin: 0;
+  text-align: center;
+  font-size: var(--fs-xs);
+  color: var(--text-muted);
+}

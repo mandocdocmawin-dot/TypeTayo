@@ -1,8 +1,11 @@
 // pages/Play.jsx
-// Debug version: raw state only, no styling. Replaced by WordBox/Timer/BonusPopup later.
 import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import useGame from '../hooks/useGame';
+import WordBox from '../components/game/WordBox';
+import Timer from '../components/game/Timer';
+import BonusPopup from '../components/game/BonusPopup';
+import styles from './Play.module.css';
 
 const LEVELS = ['easy', 'medium', 'hard'];
 
@@ -37,41 +40,49 @@ export default function Play() {
   const { word, index, remainingMs, countdown, result } = game;
 
   return (
-    <div style={{ padding: 24, fontFamily: 'monospace' }}>
-      <h1>Play (debug) - {level}</h1>
+    <div className={styles.page}>
+      <header className={styles.head}>
+        <h1 className={styles.title}>Play</h1>
+        <span className={styles.badge} data-level={level}>{level}</span>
+      </header>
 
-      <p>
-        status: <b>{status}</b>
-        {status === 'countdown' && ` (${countdown})`}
-      </p>
-
-      <p style={{ fontSize: 32 }}>
-        <span style={{ color: 'lime' }}>{word.slice(0, index)}</span>
-        <span style={{ color: 'cyan', textDecoration: 'underline' }}>{word[index]}</span>
-        <span style={{ opacity: 0.5 }}>{word.slice(index + 1)}</span>
-      </p>
-
-      <ul>
-        <li>time left: {(remainingMs / 1000).toFixed(1)}s</li>
-        <li>score: {game.score}</li>
-        <li>bonusCount: {game.bonusCount}</li>
-        <li>errors: {game.errors}</li>
-        <li>wpm: {game.wpm.toFixed(1)}</li>
-        <li>accuracy: {game.accuracy.toFixed(1)}%</li>
-      </ul>
-
-      <div style={{ display: 'flex', gap: 8 }}>
-        <button onClick={game.start} disabled={status === 'countdown' || status === 'playing'}>
-          {status === 'finished' ? 'Play again' : 'Start'}
-        </button>
-        <button onClick={pause} disabled={status !== 'playing'}>Pause</button>
-        <button onClick={resume} disabled={status !== 'paused'}>Resume</button>
-        <button onClick={quit}>Reset</button>
+      <div className={styles.timerWrap}>
+        <Timer remainingMs={remainingMs} />
+        <BonusPopup bonusCount={game.bonusCount} />
       </div>
 
-      {result && <pre>{JSON.stringify(result, null, 2)}</pre>}
+      <WordBox word={word} index={index} errors={game.errors} status={status} />
 
-      <p>Esc = quit (with confirm)</p>
+      <p className={styles.hint} aria-live="polite">
+        {status === 'idle' && 'Press Start'}
+        {status === 'countdown' && <span className={styles.count}>{countdown}</span>}
+        {status === 'paused' && 'Paused. Press Resume to continue.'}
+        {status === 'finished' && 'Time is up!'}
+      </p>
+
+      <ul className={styles.stats}>
+        <li><b>{game.score}</b> score</li>
+        <li><b>{game.wpm.toFixed(0)}</b> wpm</li>
+        <li><b>{game.accuracy.toFixed(1)}%</b> accuracy</li>
+        <li><b>{game.errors}</b> errors</li>
+      </ul>
+
+      <div className={styles.controls}>
+        <button
+          className={`${styles.btn} ${styles.primary}`}
+          onClick={game.start}
+          disabled={status === 'countdown' || status === 'playing'}
+        >
+          {status === 'finished' ? 'Play again' : 'Start'}
+        </button>
+        <button className={styles.btn} onClick={pause} disabled={status !== 'playing'}>Pause</button>
+        <button className={styles.btn} onClick={resume} disabled={status !== 'paused'}>Resume</button>
+        <button className={styles.btn} onClick={quit}>Reset</button>
+      </div>
+
+      {result && <pre className={styles.result}>{JSON.stringify(result, null, 2)}</pre>}
+
+      <p className={styles.note}>Esc = quit (with confirm)</p>
     </div>
   );
 }
