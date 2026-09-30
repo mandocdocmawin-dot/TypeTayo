@@ -1,6 +1,8 @@
 // data/words/words.test.js
 import { describe, it, expect } from 'vitest';
 import easy from './easy';
+import medium from './medium';
+import hard from './hard';
 
 describe('easy word list', () => {
   it('has 60-100 words', () => {
@@ -18,5 +20,37 @@ describe('easy word list', () => {
   });
 });
 
-// TODO: add medium (5-9 lowercase letters, 100+) and hard (80+, printable ASCII, no spaces)
-// once medium.js and hard.js are filled in.
+describe('medium word list', () => {
+  it('has at least 100 words', () => {
+    expect(medium.length).toBeGreaterThanOrEqual(100);
+  });
+
+  it('is 5-9 lowercase letters only', () => {
+    const bad = medium.filter((w) => !/^[a-z]{5,9}$/.test(w));
+    expect(bad).toEqual([]);
+  });
+
+  it('has no duplicates', () => {
+    expect(new Set(medium).size).toBe(medium.length);
+  });
+});
+
+describe('hard word list', () => {
+  it('has at least 80 entries', () => {
+    expect(hard.length).toBeGreaterThanOrEqual(80);
+  });
+
+  it('is printable ASCII with no spaces', () => {
+    const bad = hard.filter((w) => !/^[\x21-\x7E]+$/.test(w));
+    expect(bad).toEqual([]);
+  });
+
+  it('every entry has a capital, number, or symbol', () => {
+    const bad = hard.filter((w) => !/[A-Z0-9\W_]/.test(w));
+    expect(bad).toEqual([]);
+  });
+
+  it('has no duplicates', () => {
+    expect(new Set(hard).size).toBe(hard.length);
+  });
+});
