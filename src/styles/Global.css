@@ -122,7 +122,6 @@ kbd,
 :focus-visible {
   outline: 3px solid var(--cyan);
   outline-offset: 3px;
-  border-radius: var(--radius-sm);
 }
 
 /* ---- Scrollbar ---- */
@@ -158,31 +157,18 @@ kbd,
   user-select: none;
 }
 
-/* ---- Shared keyframes used by the game components ---- */
-@keyframes tt-shake {
-  0%, 100% { transform: translateX(0); }
-  20% { transform: translateX(-6px); }
-  40% { transform: translateX(6px); }
-  60% { transform: translateX(-4px); }
-  80% { transform: translateX(4px); }
-}
-
-@keyframes tt-bonus-pop {
-  0% { opacity: 0; transform: translateY(8px) scale(0.9); }
-  20% { opacity: 1; transform: translateY(0) scale(1.05); }
-  100% { opacity: 0; transform: translateY(-18px) scale(1); }
-}
-
 /* ---- Reduced motion ---- */
 @media (prefers-reduced-motion: reduce) {
   html {
     scroll-behavior: auto;
   }
 
+  /* Transitions are shortened globally. Animations are NOT forced off here:
+     each game component provides its own reduced-motion version
+     (no shake movement, popup becomes a plain fade) so the feedback stays visible. */
   *,
   *::before,
   *::after {
-    animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }

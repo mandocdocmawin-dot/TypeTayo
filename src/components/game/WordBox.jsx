@@ -21,7 +21,7 @@ export default function WordBox({ word, index, errors, status }) {
 
   return (
     <div
-      className={styles.box}
+      className={`${styles.box} no-select`}
       role="img"
       aria-label={visible ? `Type the word: ${word}` : 'Word area'}
     >

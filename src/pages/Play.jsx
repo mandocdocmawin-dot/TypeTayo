@@ -2,12 +2,11 @@
 import { useEffect } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import useGame from '../hooks/useGame';
+import { LEVELS } from '../game/config';
 import WordBox from '../components/game/WordBox';
 import Timer from '../components/game/Timer';
 import BonusPopup from '../components/game/BonusPopup';
 import styles from './Play.module.css';
-
-const LEVELS = ['easy', 'medium', 'hard'];
 
 export default function Play() {
   const { level } = useParams();

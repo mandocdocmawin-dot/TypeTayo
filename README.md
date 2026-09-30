@@ -245,14 +245,14 @@ Every function is `async` even when the local version is synchronous, so no comp
 **Done when:** `npm run dev` runs and the App shell renders with the router.
 
 ### Phase 1: Game core (no keyboard UI yet)
-- [ ] Word lists (easy, medium, hard)
+- [x] Word lists (easy, medium, hard)
 - [x] `wordPicker.js`, `scoring.js`, `config.js`
 - [x] Unit tests for scoring and wordPicker
 - [x] `gameReducer.js` (state machine)
 - [x] `useKeyCapture` (keydown, no repeat, no modifier-only)
-- [ ] `WordBox` with typed, current, and blurred states
-- [ ] `Timer` with progress bar and `BonusPopup`
-- [ ] Error handling: shake and error count
+- [x] `WordBox` with typed, current, and blurred states
+- [x] `Timer` with progress bar and `BonusPopup`
+- [x] Error handling: shake and error count
 
 **Done when:** you can play Easy, Medium, and Hard on a simple page, and the timer, +3s, score, WPM, and accuracy all work.
 
@@ -317,12 +317,12 @@ Login / accounts (TODO), backend (Laravel API, anti-cheat, rate limits), admin s
 
 **Rule for whoever updates this file (human or AI):** when asked to "check" progress, only tick the boxes in Section 11. Do not rewrite or reorder the plan. Put any differences from the plan in 14.2 instead.
 
-### 14.1 Current status (2026-09-30)
+### 14.1 Current status (2026-10-01)
 
 - **Done, tests passing (25 tests):** `config.js`, `scoring.js`, `wordPicker.js`, `gameReducer.js`, each with tests except `config.js`.
 - **Tested in the browser:** `useKeyCapture.js`, `useGame.js` (typing, errors, +3s bonus, score, WPM, accuracy, and the `finished` result). Not yet verified: Pause/Resume, auto-pause on blur, Esc quit.
-- **Done:** `easy.js` (67 words), `words.test.js` (Easy only), debug `Play.jsx`, App shell with router (`/` and `/play/:level`).
-- **Placeholder only:** `medium.js` (3 words), `hard.js` (3 words), `WordBox`, `Timer`, `BonusPopup`.
+- **Done:** `easy.js`, `medium.js` (100+ words), `hard.js` (80+ entries), `words.test.js` (Easy, Medium, Hard), `WordBox`, `Timer`, `BonusPopup` (shake on error), `Play.jsx` using those components, `LEVELS` in `config.js`, App shell with router (`/` and `/play/:level`).
+- **Written but not yet verified in the browser:** `WordBox`, `Timer`, `BonusPopup`, the new `Play.jsx`, and Medium/Hard play. Run `npx vitest run` to confirm the word-list tests.
 - **Not started:** Phase 2 onward.
 
 ### 14.2 Differences from the plan
@@ -331,18 +331,21 @@ Login / accounts (TODO), backend (Laravel API, anti-cheat, rate limits), admin s
 - `calcWpm(correctChars, durationMs)` takes milliseconds, not minutes.
 - The reducer state has extra fields: `remainingMs`, `pausedAt`, `pausedMs`, `playedMs`, `wordHadError`, `bonusCount`.
 - The reducer is pure. `useGame` passes `now` (from `performance.now()`) and `nextWord` (from `picker.next()`) inside each action. Never call `performance.now()` or `Math.random()` inside the reducer.
-- `LEVELS` is mentioned in the folder structure comment for `config.js` but does not exist yet.
+- `LEVELS` now exists in `config.js` and `Play.jsx` imports it. `useGame.js` still has its own `WORDS` map keyed by level.
+- Game components use CSS Modules (`WordBox.module.css`, `Timer.module.css`, `BonusPopup.module.css`, `Play.module.css`) next to the component. They only use variables from `Tokens.css`.
+- `WordBox` detects a new error from the `errors` prop and `BonusPopup` detects a new bonus from `bonusCount`. `useGame` was not changed for this.
+- The unused `tt-shake` and `tt-bonus-pop` keyframes were removed from `Global.css`, and its reduced-motion rule no longer forces animations off. Each game component has its own reduced-motion version.
 - The submit payload (Section 10) has no `createdAt`, but `sortScores` needs it. `localAdapter` must add `createdAt` when saving.
 - Pause does not auto-resume. After a blur, the player presses Resume.
 
 ### 14.3 TODO (next)
 
-- [ ] Fill `medium.js` (100+ words, 5-9 lowercase letters) and `hard.js` (80+ entries with capitals, numbers, and symbols)
-- [ ] Extend `words.test.js` (Easy only for now) with Medium and Hard checks
+- [x] Fill `medium.js` (100+ words, 5-9 lowercase letters) and `hard.js` (80+ entries with capitals, numbers, and symbols)
+- [x] Extend `words.test.js` (Easy only for now) with Medium and Hard checks
 - [ ] Verify in the browser: Pause/Resume, auto-pause on blur, and Esc quit
-- [ ] `WordBox` (typed, current, blurred), `Timer` with progress bar, `BonusPopup`, shake on error
-- [ ] Check the remaining Phase 0 leftovers: full folder structure, contents of `Global.css`, `.env.example`
-- [ ] Add `LEVELS` to `config.js`, or remove it from the folder structure comment (`Play.jsx` currently has its own local `LEVELS`)
+- [x] `WordBox` (typed, current, blurred), `Timer` with progress bar, `BonusPopup`, shake on error
+- [ ] Check the remaining Phase 0 leftovers: full folder structure (checked), contents of `Global.css` (checked), `.env.example` (still to check)
+- [x] Add `LEVELS` to `config.js`, or remove it from the folder structure comment (`Play.jsx` currently has its own local `LEVELS`)
 
 ### 14.4 Files to give an AI so it understands the flow
 
