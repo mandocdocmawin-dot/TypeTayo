@@ -235,21 +235,21 @@ Every function is `async` even when the local version is synchronous, so no comp
 ## 11. Phases and checklists
 
 ### Phase 0: Setup
-- [ ] `npm create vite@latest typetayo -- --template react`
-- [ ] Install `react-router-dom` and `vitest`
-- [ ] Create the folder structure above
-- [ ] `tokens.css`, `global.css`, and fonts
-- [ ] `.env.example` with `VITE_API_MODE=local`
-- [ ] Git init, `.gitignore`, first commit
+- [x] `npm create vite@latest typetayo -- --template react`
+- [x] Install `react-router-dom` and `vitest`
+- [x] Create the folder structure above
+- [x] `tokens.css`, `global.css`, and fonts
+- [x] `.env.example` with `VITE_API_MODE=local`
+- [x] Git init, `.gitignore`, first commit
 
 **Done when:** `npm run dev` runs and the App shell renders with the router.
 
 ### Phase 1: Game core (no keyboard UI yet)
 - [ ] Word lists (easy, medium, hard)
-- [ ] `wordPicker.js`, `scoring.js`, `config.js`
-- [ ] Unit tests for scoring and wordPicker
-- [ ] `gameReducer.js` (state machine)
-- [ ] `useKeyCapture` (keydown, no repeat, no modifier-only)
+- [x] `wordPicker.js`, `scoring.js`, `config.js`
+- [x] Unit tests for scoring and wordPicker
+- [x] `gameReducer.js` (state machine)
+- [x] `useKeyCapture` (keydown, no repeat, no modifier-only)
 - [ ] `WordBox` with typed, current, and blurred states
 - [ ] `Timer` with progress bar and `BonusPopup`
 - [ ] Error handling: shake and error count
@@ -312,3 +312,54 @@ Every function is `async` even when the local version is synchronous, so no comp
 ## 13. Later (not in scope now)
 
 Login / accounts (TODO), backend (Laravel API, anti-cheat, rate limits), admin side, Tagalog word lists, daily challenge, and achievements. These are in the master plan and will not change the frontend structure when added.
+
+## 14. Status and AI handoff (keep this section updated)
+
+**Rule for whoever updates this file (human or AI):** when asked to "check" progress, only tick the boxes in Section 11. Do not rewrite or reorder the plan. Put any differences from the plan in 14.2 instead.
+
+### 14.1 Current status (2026-09-30)
+
+- **Done, tests passing (25 tests):** `config.js`, `scoring.js`, `wordPicker.js`, `gameReducer.js`, each with tests except `config.js`.
+- **Tested in the browser:** `useKeyCapture.js`, `useGame.js` (typing, errors, +3s bonus, score, WPM, accuracy, and the `finished` result). Not yet verified: Pause/Resume, auto-pause on blur, Esc quit.
+- **Done:** `easy.js` (67 words), `words.test.js` (Easy only), debug `Play.jsx`, App shell with router (`/` and `/play/:level`).
+- **Placeholder only:** `medium.js` (3 words), `hard.js` (3 words), `WordBox`, `Timer`, `BonusPopup`.
+- **Not started:** Phase 2 onward.
+
+### 14.2 Differences from the plan
+
+- Style files are capitalized: `Tokens.css`, `Global.css`, `Fonts.css` (plan says lowercase). Imports must match the exact casing, because Vercel and Netlify are case-sensitive.
+- `calcWpm(correctChars, durationMs)` takes milliseconds, not minutes.
+- The reducer state has extra fields: `remainingMs`, `pausedAt`, `pausedMs`, `playedMs`, `wordHadError`, `bonusCount`.
+- The reducer is pure. `useGame` passes `now` (from `performance.now()`) and `nextWord` (from `picker.next()`) inside each action. Never call `performance.now()` or `Math.random()` inside the reducer.
+- `LEVELS` is mentioned in the folder structure comment for `config.js` but does not exist yet.
+- The submit payload (Section 10) has no `createdAt`, but `sortScores` needs it. `localAdapter` must add `createdAt` when saving.
+- Pause does not auto-resume. After a blur, the player presses Resume.
+
+### 14.3 TODO (next)
+
+- [ ] Fill `medium.js` (100+ words, 5-9 lowercase letters) and `hard.js` (80+ entries with capitals, numbers, and symbols)
+- [ ] Extend `words.test.js` (Easy only for now) with Medium and Hard checks
+- [ ] Verify in the browser: Pause/Resume, auto-pause on blur, and Esc quit
+- [ ] `WordBox` (typed, current, blurred), `Timer` with progress bar, `BonusPopup`, shake on error
+- [ ] Check the remaining Phase 0 leftovers: full folder structure, contents of `Global.css`, `.env.example`
+- [ ] Add `LEVELS` to `config.js`, or remove it from the folder structure comment (`Play.jsx` currently has its own local `LEVELS`)
+
+### 14.4 Files to give an AI so it understands the flow
+
+**Always include:**
+- `README.md` (this plan)
+- `src/game/config.js`
+- `src/game/gameReducer.js`
+- `src/hooks/useGame.js` (its return value is the interface for all game UI)
+- `src/hooks/useKeyCapture.js`
+
+**Add depending on the task:**
+- Scoring or leaderboard: `src/game/scoring.js`, `src/game/wordPicker.js`, and their test files
+- Game screen UI: `src/pages/Play.jsx`, the component being edited, `src/styles/Tokens.css`
+- API adapter: Section 10 of this file and the `result` object returned by `useGame`
+
+**Usually not needed:** word list files (long) unless changing them, and the Vite template files (`App.css`, `index.css`).
+
+### 14.5 Flow in short
+
+`Play.jsx` calls `useGame(level)`. The hook creates a `wordPicker`, runs the countdown, the timer loop (`requestAnimationFrame` with `endsAt`), and auto-pause, and listens to keys through `useKeyCapture`. Every change goes through `gameReducer` (`idle, countdown, playing, paused, finished`). When the game is finished, `useGame` returns `result`, which has the same shape as the submit payload minus `playerName`.
