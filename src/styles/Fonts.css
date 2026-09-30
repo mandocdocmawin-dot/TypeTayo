@@ -1,0 +1,13 @@
+/* ==========================================================================
+   TypeTayo fonts (self-hosted through Fontsource, no Google Fonts requests)
+
+   Install first:
+     npm install @fontsource-variable/nunito @fontsource-variable/jetbrains-mono
+
+   UI font:   Nunito           -> family name 'Nunito Variable'
+   Mono font: JetBrains Mono   -> family name 'JetBrains Mono Variable'
+   The stacks that use these names are in tokens.css (--font-ui, --font-mono).
+   ========================================================================== */
+
+@import '@fontsource-variable/nunito';
+@import '@fontsource-variable/jetbrains-mono';

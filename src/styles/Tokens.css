@@ -1,0 +1,140 @@
+/* ==========================================================================
+   TypeTayo design tokens
+   Dark is the default. Light theme overrides live under [data-theme="light"].
+   Components should use these variables only, never raw hex values.
+   ========================================================================== */
+
+:root {
+  color-scheme: dark;
+
+  /* ---- Color: surfaces ---- */
+  --bg: #0A1024;
+  --bg-elevated: #10183A;
+  --border: #1B2650;
+
+  /* ---- Color: text ---- */
+  --text: #FFFFFF;
+  --text-muted: #9FB0D9;
+
+  /* ---- Color: accents ---- */
+  --cyan: #1FD1FF;      /* main accent, current letter, Medium */
+  --orange: #FFB020;    /* +3s bonus, Hard, sun logo */
+  --green: #4ADE80;     /* typed letters, Easy */
+  --danger: #FF5C7A;    /* wrong key */
+
+  /* Text color to place ON an accent-filled surface (buttons, badges) */
+  --on-accent: #0A1024;
+
+  /* ---- Color: level aliases ---- */
+  --level-easy: var(--green);
+  --level-medium: var(--cyan);
+  --level-hard: var(--orange);
+
+  /* ---- Color: soft tints and glows (derived from the accents) ---- */
+  --cyan-soft: color-mix(in srgb, var(--cyan) 14%, transparent);
+  --orange-soft: color-mix(in srgb, var(--orange) 14%, transparent);
+  --green-soft: color-mix(in srgb, var(--green) 14%, transparent);
+  --danger-soft: color-mix(in srgb, var(--danger) 16%, transparent);
+
+  --glow-cyan: 0 0 0 1px var(--cyan), 0 0 18px color-mix(in srgb, var(--cyan) 55%, transparent);
+  --glow-orange: 0 0 0 1px var(--orange), 0 0 18px color-mix(in srgb, var(--orange) 55%, transparent);
+
+  /* ---- Keyboard and hands ---- */
+  --key-bg: var(--bg-elevated);
+  --key-border: var(--border);
+  --key-text: var(--text-muted);
+  --key-active-bg: var(--cyan-soft);
+  --finger-idle: var(--border);
+  --finger-active: var(--cyan);
+
+  /* ---- Radius ---- */
+  --radius: 14px;
+  --radius-sm: 8px;
+  --radius-lg: 22px;
+  --radius-pill: 999px;
+
+  /* ---- Typography ---- */
+  --font-ui: 'Nunito Variable', 'Nunito', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-mono: 'JetBrains Mono Variable', 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
+
+  --fs-xs: 0.8125rem;   /* 13px */
+  --fs-sm: 0.9375rem;   /* 15px */
+  --fs-md: 1rem;        /* 16px */
+  --fs-lg: 1.25rem;     /* 20px */
+  --fs-xl: 1.75rem;     /* 28px */
+  --fs-2xl: 2.5rem;     /* 40px */
+  --fs-3xl: clamp(2.5rem, 6vw, 4.5rem); /* hero headline */
+  --fs-word: clamp(1.75rem, 5vw, 3rem); /* letter tiles in the word box */
+  --fs-timer: clamp(2.5rem, 7vw, 4rem);
+
+  --fw-regular: 500;
+  --fw-bold: 700;
+  --fw-black: 900;
+
+  --lh-tight: 1.1;
+  --lh-base: 1.5;
+
+  /* ---- Spacing (4px base) ---- */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.5rem;
+  --space-6: 2rem;
+  --space-7: 3rem;
+  --space-8: 4.5rem;
+
+  /* ---- Layout ---- */
+  --container: 1120px;
+  --nav-height: 64px;
+
+  /* ---- Shadows ---- */
+  --shadow-card: 0 10px 30px rgba(0, 0, 0, 0.35);
+  --shadow-pop: 0 6px 18px rgba(0, 0, 0, 0.4);
+
+  /* ---- Motion ---- */
+  --ease: cubic-bezier(0.22, 0.61, 0.36, 1);
+  --dur-fast: 120ms;
+  --dur-base: 220ms;
+  --dur-slow: 420ms;
+
+  /* Blur used on upcoming letters in the word box */
+  --blur-upcoming: 6px;
+  --opacity-upcoming: 0.55;
+
+  /* ---- Z-index ---- */
+  --z-nav: 50;
+  --z-overlay: 100;
+  --z-modal: 200;
+}
+
+/* ==========================================================================
+   Light theme
+   Accents are darkened so text and borders keep enough contrast on white.
+   ========================================================================== */
+[data-theme="light"] {
+  color-scheme: light;
+
+  --bg: #F4F7FF;
+  --bg-elevated: #FFFFFF;
+  --border: #D3DBF0;
+
+  --text: #0A1024;
+  --text-muted: #4A5A86;
+
+  --cyan: #0A93C2;
+  --orange: #C97A00;
+  --green: #1C9C50;
+  --danger: #D32F52;
+
+  --on-accent: #FFFFFF;
+
+  --glow-cyan: 0 0 0 1px var(--cyan), 0 0 14px color-mix(in srgb, var(--cyan) 35%, transparent);
+  --glow-orange: 0 0 0 1px var(--orange), 0 0 14px color-mix(in srgb, var(--orange) 35%, transparent);
+
+  --shadow-card: 0 8px 24px rgba(20, 35, 90, 0.10);
+  --shadow-pop: 0 6px 16px rgba(20, 35, 90, 0.16);
+
+  --blur-upcoming: 5px;
+  --opacity-upcoming: 0.6;
+}
