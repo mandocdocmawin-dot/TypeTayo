@@ -1,0 +1,28 @@
+/* Sits on top of the keys. The parent (Keyboard) is position: relative. */
+.hands {
+  position: absolute;
+  top: 0;
+  left: 0;
+  z-index: 2; /* above the glowing key, like the fingertip resting on it */
+  width: 100%;
+  height: auto;
+  pointer-events: none;
+  overflow: visible;
+}
+
+/* the hand: almost transparent fill (the keys stay readable) + one thin outline */
+.hand {
+  fill: var(--hand-fill, #dbe7f5);
+  fill-opacity: var(--hand-fill-opacity, 0.08);
+  stroke: var(--hand-line, #a9b8c9);
+  stroke-opacity: 0.8;
+  stroke-width: 1.5px;
+  stroke-linejoin: round;
+  stroke-linecap: round;
+}
+
+/* soft light under the fingertip that has to press the key */
+.spot {
+  fill: url(#tt-hands-spot-grad);
+  stroke: none;
+}

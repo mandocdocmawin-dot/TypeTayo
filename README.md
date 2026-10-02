@@ -257,13 +257,13 @@ Every function is `async` even when the local version is synchronous, so no comp
 **Done when:** you can play Easy, Medium, and Hard on a simple page, and the timer, +3s, score, WPM, and accuracy all work.
 
 ### Phase 2: Keyboard and hands
-- [ ] `keyLayout.js` and the `Keyboard` component
-- [ ] Only one key glows, plus Shift for capitals and symbols
-- [ ] `fingerMap.js` with tests
-- [ ] Static `Hands` SVG
-- [ ] Finger highlight
-- [ ] "Show hands" toggle
-- [ ] (Optional) reach animation
+- [x] `keyLayout.js` and the `Keyboard` component
+- [x] Only one key glows, plus Shift for capitals and symbols
+- [x] `fingerMap.js` with tests
+- [x] Static `Hands` SVG
+- [x] Finger highlight
+- [x] "Show hands" toggle
+- [x] (Optional) reach animation
 
 **Done when:** the finger and key are correct for every letter, number, and symbol on Hard.
 
@@ -322,8 +322,10 @@ Login / accounts (TODO), backend (Laravel API, anti-cheat, rate limits), admin s
 - **Done, tests passing (25 tests):** `config.js`, `scoring.js`, `wordPicker.js`, `gameReducer.js`, each with tests except `config.js`.
 - **Tested in the browser:** `useKeyCapture.js`, `useGame.js` (typing, errors, +3s bonus, score, WPM, accuracy, and the `finished` result). Not yet verified: Pause/Resume, auto-pause on blur, Esc quit.
 - **Done:** `easy.js`, `medium.js` (100+ words), `hard.js` (80+ entries), `words.test.js` (Easy, Medium, Hard), `WordBox`, `Timer`, `BonusPopup` (shake on error), `Play.jsx` using those components, `LEVELS` in `config.js`, App shell with router (`/` and `/play/:level`).
-- **Written but not yet verified in the browser:** `WordBox`, `Timer`, `BonusPopup`, the new `Play.jsx`, and Medium/Hard play. Run `npx vitest run` to confirm the word-list tests.
-- **Not started:** Phase 2 onward.
+- **Seen in the browser (screenshot):** the new `Play.jsx` layout, `Timer`, and `WordBox` (current tile and blurred upcoming tiles) during the countdown. Word-list tests pass in vitest.
+- **Not yet verified in the browser:** shake on error, the `+3s` popup, Pause/Resume, auto-pause on blur, Esc quit, and Medium/Hard play.
+- **Phase 2 written, tests passing, not yet seen in the browser:** `keyLayout.js`, `fingerMap.js` (with `fingerMap.test.js`), `Keyboard`, `Key`, `Hands` (static hands and finger highlight), `useLocalStorage.js`, and the Show hands switch in `Play.jsx`. The optional reach animation is not done.
+- **Not started:** Phase 3 onward, apart from what `Play.jsx` already does (countdown, pause, auto-pause, Esc).
 
 ### 14.2 Differences from the plan
 
@@ -337,15 +339,14 @@ Login / accounts (TODO), backend (Laravel API, anti-cheat, rate limits), admin s
 - The unused `tt-shake` and `tt-bonus-pop` keyframes were removed from `Global.css`, and its reduced-motion rule no longer forces animations off. Each game component has its own reduced-motion version.
 - The submit payload (Section 10) has no `createdAt`, but `sortScores` needs it. `localAdapter` must add `createdAt` when saving.
 - Pause does not auto-resume. After a blur, the player presses Resume.
+- Key ids in `keyLayout.js` are the base character for printable keys (`a`, `3`, `/`) and names for the rest (`Space`, `ShiftLeft`, `ShiftRight`). `getHint(char)` in `fingerMap.js` returns `{ keyId, finger, shiftKeyId, shiftFinger }`.
+- Space uses the finger id `thumb`, and `Hands` lights both thumbs for it. The SVG has `L-thumb` and `R-thumb` paths next to the four fingers per hand.
+- The Show hands switch is saved in localStorage under `typetayo:showHands` (default: on).
 
 ### 14.3 TODO (next)
 
-- [x] Fill `medium.js` (100+ words, 5-9 lowercase letters) and `hard.js` (80+ entries with capitals, numbers, and symbols)
-- [x] Extend `words.test.js` (Easy only for now) with Medium and Hard checks
-- [ ] Verify in the browser: Pause/Resume, auto-pause on blur, and Esc quit
-- [x] `WordBox` (typed, current, blurred), `Timer` with progress bar, `BonusPopup`, shake on error
-- [ ] Check the remaining Phase 0 leftovers: full folder structure (checked), contents of `Global.css` (checked), `.env.example` (still to check)
-- [x] Add `LEVELS` to `config.js`, or remove it from the folder structure comment (`Play.jsx` currently has its own local `LEVELS`)
+- [ ] Check `.env.example` (the last Phase 0 leftover)
+- [ ] Verify Phase 2 in the browser: only one key glows (plus Shift on capitals and symbols), the right finger glows for every Hard character, and Show hands remembers its state. Then tick the Phase 2 boxes in Section 11.
 
 ### 14.4 Files to give an AI so it understands the flow
 
@@ -360,6 +361,7 @@ Login / accounts (TODO), backend (Laravel API, anti-cheat, rate limits), admin s
 - Scoring or leaderboard: `src/game/scoring.js`, `src/game/wordPicker.js`, and their test files
 - Game screen UI: `src/pages/Play.jsx`, the component being edited, `src/styles/Tokens.css`
 - API adapter: Section 10 of this file and the `result` object returned by `useGame`
+- Keyboard and hands: `src/game/keyLayout.js`, `src/game/fingerMap.js` and its test, `src/components/keyboard/`
 
 **Usually not needed:** word list files (long) unless changing them, and the Vite template files (`App.css`, `index.css`).
 

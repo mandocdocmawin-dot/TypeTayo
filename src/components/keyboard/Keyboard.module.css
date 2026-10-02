@@ -1,0 +1,18 @@
+.keyboard {
+  /* One key-unit = 1/15 of the keyboard width. Every row is exactly one unit tall, so the
+     hands (drawn in the same unit space) line up with the keys at any width. */
+  --u: calc(100cqw / 15);
+  --key-gap: clamp(3px, 0.9cqw, 10px);
+  position: relative;
+  container-type: inline-size; /* makes cqw mean "% of the keyboard width" */
+  width: 100%;
+}
+
+.row {
+  display: flex;
+}
+
+/* Empty space under the keys where the wrists and arms of the hands fade out */
+.below {
+  height: calc(var(--u) * var(--below));
+}

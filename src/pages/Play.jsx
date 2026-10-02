@@ -6,6 +6,10 @@ import { LEVELS } from '../game/config';
 import WordBox from '../components/game/WordBox';
 import Timer from '../components/game/Timer';
 import BonusPopup from '../components/game/BonusPopup';
+import Keyboard from '../components/keyboard/Keyboard';
+import Hands, { HANDS_EXTRA_UNITS } from '../components/keyboard/Hands';
+import useLocalStorage from '../hooks/useLocalStorage';
+import { getHint } from '../game/fingerMap';
 import styles from './Play.module.css';
 
 export default function Play() {
@@ -14,6 +18,7 @@ export default function Play() {
   const valid = LEVELS.includes(level);
   const game = useGame(valid ? level : 'easy');
   const { status, pause, resume, quit } = game;
+  const [showHands, setShowHands] = useLocalStorage('typetayo:showHands', true);
 
   // Esc is handled here, not in useKeyCapture
   useEffect(() => {
@@ -38,50 +43,80 @@ export default function Play() {
 
   const { word, index, remainingMs, countdown, result } = game;
 
+  // What to light up on the keyboard and hands for the next character
+  const guiding = status === 'countdown' || status === 'playing';
+  const hint = guiding ? getHint(word[index]) : null;
+  const activeFingers = hint ? [hint.finger, hint.shiftFinger].filter(Boolean) : [];
+
   return (
     <div className={styles.page}>
-      <header className={styles.head}>
-        <h1 className={styles.title}>Play</h1>
-        <span className={styles.badge} data-level={level}>{level}</span>
+      <header className={styles.topbar}>
+        <div className={styles.brand}>
+          <h1 className={styles.title}>Play</h1>
+          <span className={styles.badge} data-level={level}>{level}</span>
+        </div>
+
+        <div className={styles.timerWrap}>
+          <Timer remainingMs={remainingMs} />
+          <BonusPopup bonusCount={game.bonusCount} />
+        </div>
+
+        <ul className={styles.stats}>
+          <li><span>score</span><b>{game.score}</b></li>
+          <li><span>wpm</span><b>{game.wpm.toFixed(0)}</b></li>
+          <li><span>accuracy</span><b>{game.accuracy.toFixed(0)}%</b></li>
+          <li><span>errors</span><b>{game.errors}</b></li>
+        </ul>
       </header>
 
-      <div className={styles.timerWrap}>
-        <Timer remainingMs={remainingMs} />
-        <BonusPopup bonusCount={game.bonusCount} />
+      <div className={styles.center}>
+        <WordBox word={word} index={index} errors={game.errors} status={status} />
+        <p className={styles.hint} aria-live="polite">
+          {status === 'idle' && 'Press Start'}
+          {status === 'countdown' && <span className={styles.count}>{countdown}</span>}
+          {status === 'playing' && 'Press the highlighted key'}
+          {status === 'paused' && 'Paused. Press Resume to continue.'}
+          {status === 'finished' && 'Time is up!'}
+        </p>
       </div>
 
-      <WordBox word={word} index={index} errors={game.errors} status={status} />
-
-      <p className={styles.hint} aria-live="polite">
-        {status === 'idle' && 'Press Start'}
-        {status === 'countdown' && <span className={styles.count}>{countdown}</span>}
-        {status === 'paused' && 'Paused. Press Resume to continue.'}
-        {status === 'finished' && 'Time is up!'}
-      </p>
-
-      <ul className={styles.stats}>
-        <li><b>{game.score}</b> score</li>
-        <li><b>{game.wpm.toFixed(0)}</b> wpm</li>
-        <li><b>{game.accuracy.toFixed(1)}%</b> accuracy</li>
-        <li><b>{game.errors}</b> errors</li>
-      </ul>
-
-      <div className={styles.controls}>
-        <button
-          className={`${styles.btn} ${styles.primary}`}
-          onClick={game.start}
-          disabled={status === 'countdown' || status === 'playing'}
+      <div className={`${styles.guide} no-select`}>
+        <Keyboard
+          activeKey={hint?.keyId ?? null}
+          shiftKey={hint?.shiftKeyId ?? null}
+          belowUnits={showHands ? HANDS_EXTRA_UNITS : 0}
         >
-          {status === 'finished' ? 'Play again' : 'Start'}
-        </button>
-        <button className={styles.btn} onClick={pause} disabled={status !== 'playing'}>Pause</button>
-        <button className={styles.btn} onClick={resume} disabled={status !== 'paused'}>Resume</button>
-        <button className={styles.btn} onClick={quit}>Reset</button>
+          {showHands && <Hands activeFingers={activeFingers} />}
+        </Keyboard>
       </div>
+
+      <footer className={styles.footer}>
+        <label className={styles.toggle}>
+          <input
+            type="checkbox"
+            role="switch"
+            checked={showHands}
+            onChange={(e) => {
+              setShowHands(e.target.checked);
+              e.target.blur();
+            }}
+          />
+          <span>Show hands</span>
+        </label>
+
+        <div className={styles.controls}>
+          <button className={`${styles.btn} ${styles.primary}`} onClick={game.start}
+            disabled={status === 'countdown' || status === 'playing'}>
+            {status === 'finished' ? 'Play again' : 'Start'}
+          </button>
+          <button className={styles.btn} onClick={pause} disabled={status !== 'playing'}>Pause</button>
+          <button className={styles.btn} onClick={resume} disabled={status !== 'paused'}>Resume</button>
+          <button className={styles.btn} onClick={quit}>Reset</button>
+          <span className={styles.note}><kbd>Esc</kbd> to quit</span>
+        </div>
+      </footer>
 
       {result && <pre className={styles.result}>{JSON.stringify(result, null, 2)}</pre>}
-
-      <p className={styles.note}>Esc = quit (with confirm)</p>
     </div>
   );
 }
