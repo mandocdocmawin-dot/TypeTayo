@@ -69,13 +69,19 @@
 
 /* "Level N" katabi ng difficulty badge */
 .stage {
-  font-size: var(--fs-sm);
+  font-size: var(--fs-md);
   font-weight: var(--fw-black);
   letter-spacing: 0.04em;
   text-transform: uppercase;
   white-space: nowrap;
   font-variant-numeric: tabular-nums;
   color: var(--text);
+  animation: stagePulse var(--dur-slow) var(--ease);
+}
+
+@keyframes stagePulse {
+  0%   { color: var(--orange); transform: scale(1.35); }
+  100% { color: var(--text); transform: scale(1); }
 }
 
 .stats {
@@ -117,6 +123,7 @@
 
 /* ---- Word box + hint sa gitna ---- */
 .center {
+  position: relative;
   display: grid;
   gap: var(--space-3);
   justify-items: center;
@@ -163,7 +170,8 @@
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .count {
+  .count,
+  .stage {
     animation: none;
   }
 }

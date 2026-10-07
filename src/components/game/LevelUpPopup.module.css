@@ -1,0 +1,58 @@
+.popup {
+  position: fixed;
+  top: 38%;
+  left: 50%;
+  z-index: var(--z-overlay);
+  display: grid;
+  justify-items: center;
+  gap: var(--space-2);
+  padding: var(--space-5) var(--space-8, 3rem);
+  pointer-events: none; /* hindi nakaharang sa pag-type */
+  white-space: nowrap;
+  text-align: center;
+  background: color-mix(in srgb, var(--bg-elevated) 82%, transparent);
+  border: 2px solid var(--cyan);
+  border-radius: var(--radius-lg);
+  box-shadow:
+    var(--glow-cyan),
+    0 0 60px color-mix(in srgb, var(--cyan) 35%, transparent);
+  backdrop-filter: blur(6px);
+  animation: levelUp 1200ms var(--ease) forwards;
+}
+
+.small {
+  font-size: var(--fs-md);
+  font-weight: var(--fw-bold);
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--orange);
+}
+
+.big {
+  font-size: var(--fs-2xl);
+  font-weight: var(--fw-black);
+  line-height: 1;
+  color: var(--cyan);
+  text-shadow: 0 0 22px color-mix(in srgb, var(--cyan) 60%, transparent);
+}
+
+@keyframes levelUp {
+  0%   { opacity: 0; transform: translate(-50%, -50%) scale(0.6); }
+  18%  { opacity: 1; transform: translate(-50%, -50%) scale(1.12); }
+  30%  { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  75%  { opacity: 1; transform: translate(-50%, -50%) scale(1); }
+  100% { opacity: 0; transform: translate(-50%, -58%) scale(1); }
+}
+
+@keyframes levelUpFade {
+  0%   { opacity: 0; transform: translate(-50%, -50%); }
+  20%  { opacity: 1; transform: translate(-50%, -50%); }
+  75%  { opacity: 1; transform: translate(-50%, -50%); }
+  100% { opacity: 0; transform: translate(-50%, -50%); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .popup {
+    animation-name: levelUpFade; /* still an animation so onAnimationEnd fires */
+  }
+}

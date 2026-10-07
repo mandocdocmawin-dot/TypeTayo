@@ -1,11 +1,13 @@
 // pages/Play.jsx
-import { useEffect, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import useGame from '../hooks/useGame';
 import { LEVELS } from '../game/config';
 import Logo from '../components/common/Logo';
+import QuitModal from '../components/game/QuitModal';
 import WordBox from '../components/game/WordBox';
 import Timer from '../components/game/Timer';
+import LevelUpPopup from '../components/game/LevelUpPopup';
 import BonusPopup from '../components/game/BonusPopup';
 import ResultModal from '../components/game/ResultModal';
 import Keyboard from '../components/keyboard/Keyboard';
@@ -22,6 +24,8 @@ export default function Play() {
   const { status, word, index, start, pause, resume, quit } = game;
   const [showHands, setShowHands] = useLocalStorage('typetayo:showHands', true);
   const [dismissed, setDismissed] = useState(false);
+  const [confirmQuit, setConfirmQuit] = useState(false);
+  const resumeAfterRef = useRef(false);
 
   useEffect(() => {
     if (status !== 'finished') setDismissed(false);
@@ -29,24 +33,28 @@ export default function Play() {
 
   useEffect(() => {
     function onEsc(e) {
-      if (e.key !== 'Escape' || e.repeat) return;
-      const wasPlaying = status === 'playing';
-      if (wasPlaying) pause();
-      if (window.confirm('Quit and go back to the home page?')) {
-        quit();
-        navigate('/');
-      } else if (wasPlaying) {
-        resume();
-      }
+      if (e.key !== 'Escape' || e.repeat || confirmQuit) return;
+
+      resumeAfterRef.current = status === 'playing';
+      if (status === 'playing') pause();
+      else if (status === 'countdown') quit(); 
+      setConfirmQuit(true);
     }
     window.addEventListener('keydown', onEsc);
     return () => window.removeEventListener('keydown', onEsc);
-  }, [status, pause, resume, quit, navigate]);
+  }, [status, confirmQuit, pause, quit]);
 
   useEffect(() => {
     function onToggle(e) {
       if (e.code !== 'Space' || !e.shiftKey) return;
       if (e.ctrlKey || e.altKey || e.metaKey) return;
+
+      if (confirmQuit) {
+        e.preventDefault();
+        e.stopImmediatePropagation();
+        return;
+      }
+
       if (status === 'playing' && word[index] === ' ') return;
 
       e.preventDefault();
@@ -62,7 +70,7 @@ export default function Play() {
 
     window.addEventListener('keydown', onToggle, { capture: true });
     return () => window.removeEventListener('keydown', onToggle, { capture: true });
-  }, [status, word, index, start, pause, resume]);
+  }, [status, word, index, confirmQuit, start, pause, resume]);
 
   if (!valid) {
     return <p>Unknown level: {level}</p>;
@@ -72,7 +80,6 @@ export default function Play() {
   const ready = status === 'idle' || status === 'finished';
   const guiding = status === 'countdown' || status === 'playing';
   const hint = guiding ? getHint(word[index]) : null;
-  const activeFingers = hint ? [hint.finger, hint.shiftFinger].filter(Boolean) : [];
 
   return (
     <div className={styles.page}>
@@ -89,7 +96,7 @@ export default function Play() {
 
         <div className={styles.right}>
           <span className={styles.badge} data-level={level}>{level}</span>
-          <span className={styles.stage}>Level {game.stage}</span>
+          <span key={game.stage} className={styles.stage}>Level {game.stage}</span>
           <ul className={styles.stats}>
             <li><span>score</span><b>{game.score}</b></li>
             <li><span>wpm</span><b>{game.wpm.toFixed(0)}</b></li>
@@ -113,6 +120,7 @@ export default function Play() {
           {status === 'paused' && 'Paused. Press Shift + Space to continue.'}
           {status === 'finished' && (game.completed ? 'You finished all levels!' : 'Time is up!')}
         </p>
+        <LevelUpPopup stage={game.stage} playing={status === 'playing'} />
       </div>
 
       <div className={`${styles.guide} no-select`}>
@@ -121,7 +129,7 @@ export default function Play() {
           shiftKey={hint?.shiftKeyId ?? null}
           belowUnits={showHands ? HANDS_EXTRA_UNITS : 0}
         >
-          {showHands && <Hands activeFingers={activeFingers} />}
+          {showHands && <Hands />}
         </Keyboard>
       </div>
 
@@ -164,6 +172,20 @@ export default function Play() {
           }}
           onViewLeaderboard={() => navigate('/leaderboard')}
           onClose={() => setDismissed(true)}
+        />
+      )}
+
+      {confirmQuit && (
+        <QuitModal
+          onStay={() => {
+            setConfirmQuit(false);
+            if (resumeAfterRef.current) resume();
+          }}
+          onQuit={() => {
+            setConfirmQuit(false);
+            quit();
+            navigate('/');
+          }}
         />
       )}
     </div>
