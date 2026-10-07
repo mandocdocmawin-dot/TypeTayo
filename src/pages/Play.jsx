@@ -1,8 +1,12 @@
 // pages/Play.jsx
-import { useEffect } from 'react';
+import { useEffect, useMemo } from 'react';
 import { useNavigate, useParams } from 'react-router-dom';
 import useGame from '../hooks/useGame';
 import { LEVELS } from '../game/config';
+import easy from '../data/words/easy';
+import medium from '../data/words/medium';
+import hard from '../data/words/hard';
+import Logo from '../components/common/Logo';
 import WordBox from '../components/game/WordBox';
 import Timer from '../components/game/Timer';
 import BonusPopup from '../components/game/BonusPopup';
@@ -12,20 +16,26 @@ import useLocalStorage from '../hooks/useLocalStorage';
 import { getHint } from '../game/fingerMap';
 import styles from './Play.module.css';
 
+const WORD_LISTS = { easy, medium, hard };
+const randomWord = (list) => list[Math.floor(Math.random() * list.length)];
+
 export default function Play() {
   const { level } = useParams();
   const navigate = useNavigate();
   const valid = LEVELS.includes(level);
   const game = useGame(valid ? level : 'easy');
-  const { status, pause, resume, quit } = game;
+  const { status, start, pause, resume, quit } = game;
   const [showHands, setShowHands] = useLocalStorage('typetayo:showHands', true);
+  const previewWord = useMemo(
+    () => randomWord(WORD_LISTS[level] ?? easy),
+    [level]
+  );
 
-  // Esc is handled here, not in useKeyCapture
   useEffect(() => {
     function onEsc(e) {
       if (e.key !== 'Escape' || e.repeat) return;
       const wasPlaying = status === 'playing';
-      if (wasPlaying) pause(); // the clock must not run while the confirm is open
+      if (wasPlaying) pause();
       if (window.confirm('Quit and go back to the home page?')) {
         quit();
         navigate('/');
@@ -37,13 +47,34 @@ export default function Play() {
     return () => window.removeEventListener('keydown', onEsc);
   }, [status, pause, resume, quit, navigate]);
 
+  useEffect(() => {
+    function onToggle(e) {
+      if (e.code !== 'Space' || !e.shiftKey) return;
+      if (e.ctrlKey || e.altKey || e.metaKey) return;
+
+      e.preventDefault();
+      e.stopImmediatePropagation();
+      if (e.repeat) return;
+
+      document.activeElement?.blur?.();
+
+      if (status === 'idle' || status === 'finished') start();
+      else if (status === 'playing') pause();
+      else if (status === 'paused') resume();
+    }
+
+    window.addEventListener('keydown', onToggle, { capture: true });
+    return () => window.removeEventListener('keydown', onToggle, { capture: true });
+  }, [status, start, pause, resume]);
+
   if (!valid) {
     return <p>Unknown level: {level}</p>;
   }
 
   const { word, index, remainingMs, countdown, result } = game;
-
-  // What to light up on the keyboard and hands for the next character
+  const ready = status === 'idle' || status === 'finished';
+  const shownWord = ready ? previewWord : word;
+  const shownIndex = ready ? 0 : index;
   const guiding = status === 'countdown' || status === 'playing';
   const hint = guiding ? getHint(word[index]) : null;
   const activeFingers = hint ? [hint.finger, hint.shiftFinger].filter(Boolean) : [];
@@ -52,8 +83,8 @@ export default function Play() {
     <div className={styles.page}>
       <header className={styles.topbar}>
         <div className={styles.brand}>
-          <h1 className={styles.title}>Play</h1>
-          <span className={styles.badge} data-level={level}>{level}</span>
+          <Logo height={44} />
+          <h1 className="sr-only">Play {level}</h1>
         </div>
 
         <div className={styles.timerWrap}>
@@ -61,21 +92,29 @@ export default function Play() {
           <BonusPopup bonusCount={game.bonusCount} />
         </div>
 
-        <ul className={styles.stats}>
-          <li><span>score</span><b>{game.score}</b></li>
-          <li><span>wpm</span><b>{game.wpm.toFixed(0)}</b></li>
-          <li><span>accuracy</span><b>{game.accuracy.toFixed(0)}%</b></li>
-          <li><span>errors</span><b>{game.errors}</b></li>
-        </ul>
+        <div className={styles.right}>
+          <span className={styles.badge} data-level={level}>{level}</span>
+          <ul className={styles.stats}>
+            <li><span>score</span><b>{game.score}</b></li>
+            <li><span>wpm</span><b>{game.wpm.toFixed(0)}</b></li>
+            <li><span>accuracy</span><b>{game.accuracy.toFixed(0)}%</b></li>
+            <li><span>errors</span><b>{game.errors}</b></li>
+          </ul>
+        </div>
       </header>
 
       <div className={styles.center}>
-        <WordBox word={word} index={index} errors={game.errors} status={status} />
+        <WordBox
+          word={shownWord}
+          index={shownIndex}
+          errors={game.errors}
+          status={ready ? 'playing' : status}
+        />
         <p className={styles.hint} aria-live="polite">
-          {status === 'idle' && 'Press Start'}
-          {status === 'countdown' && <span className={styles.count}>{countdown}</span>}
+          {status === 'idle' && 'Press Start or Shift + Space'}
+          {status === 'countdown' && <span key={countdown} className={styles.count}>{countdown}</span>}
           {status === 'playing' && 'Press the highlighted key'}
-          {status === 'paused' && 'Paused. Press Resume to continue.'}
+          {status === 'paused' && 'Paused. Press Shift + Space to continue.'}
           {status === 'finished' && 'Time is up!'}
         </p>
       </div>
@@ -105,14 +144,16 @@ export default function Play() {
         </label>
 
         <div className={styles.controls}>
-          <button className={`${styles.btn} ${styles.primary}`} onClick={game.start}
+          <button className={`${styles.btn} ${styles.primary}`} onClick={start}
             disabled={status === 'countdown' || status === 'playing'}>
             {status === 'finished' ? 'Play again' : 'Start'}
           </button>
           <button className={styles.btn} onClick={pause} disabled={status !== 'playing'}>Pause</button>
           <button className={styles.btn} onClick={resume} disabled={status !== 'paused'}>Resume</button>
           <button className={styles.btn} onClick={quit}>Reset</button>
-          <span className={styles.note}><kbd>Esc</kbd> to quit</span>
+          <span className={styles.note}>
+            <kbd>Shift</kbd>+<kbd>Space</kbd> start/pause · <kbd>Esc</kbd> to quit
+          </span>
         </div>
       </footer>
 

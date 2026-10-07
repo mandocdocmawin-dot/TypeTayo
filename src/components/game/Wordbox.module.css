@@ -3,8 +3,8 @@
   align-items: center;
   justify-content: center;
   min-height: 9rem;
-  padding: var(--space-5) var(--space-4);
-  background: var(--bg-elevated);
+  padding: var(--space-5) var(--space-5);
+  background: color-mix(in srgb, var(--bg-elevated) 70%, transparent);
   border: 1px solid var(--border);
   border-radius: var(--radius-lg);
   box-shadow: var(--shadow-card);
@@ -18,20 +18,19 @@
   font-family: var(--font-mono);
   font-size: var(--fs-word);
   font-weight: var(--fw-bold);
-  line-height: var(--lh-tight);
-  transition: filter var(--dur-base) var(--ease);
 }
 
 .tile {
   display: grid;
   place-items: center;
-  min-width: 1.4em;
-  height: 1.8em;
+  min-width: 1.5em;
+  height: 1.9em;
   padding: 0 0.15em;
   color: var(--text-muted);
-  background: var(--bg);
+  background: color-mix(in srgb, var(--bg-elevated) 80%, var(--bg));
   border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius);
+  box-shadow: inset 0 -3px 0 var(--tile-color, transparent);
   transition:
     color var(--dur-fast) var(--ease),
     background-color var(--dur-fast) var(--ease),
@@ -44,13 +43,16 @@
 .typed {
   color: var(--green);
   background: var(--green-soft);
-  border-color: var(--green);
+  border-color: color-mix(in srgb, var(--green) 40%, var(--border));
 }
 
 .current {
   color: var(--cyan);
   background: var(--cyan-soft);
-  box-shadow: var(--glow-cyan);
+  border: 2px solid var(--cyan);
+  box-shadow:
+    var(--glow-cyan),
+    inset 0 0 14px color-mix(in srgb, var(--cyan) 25%, transparent);
 }
 
 .upcoming {

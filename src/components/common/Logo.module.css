@@ -2,9 +2,27 @@
 .logo {
   display: inline-flex;
   align-items: center;
+  gap: calc(var(--h) * 0.25);
 }
 
-.logo img {
-  width: auto;
+/* Ang icon ang sumusunod sa height prop */
+.icon {
+  width: var(--h);
+  height: var(--h);
   object-fit: contain;
+  /* ang PNG ay may sariling rounded corners; malinis ang gilid kahit may anti-aliasing */
+  border-radius: 22%;
+}
+
+.mark {
+  font-size: calc(var(--h) * 0.72);
+  font-weight: var(--fw-black);
+  line-height: 1;
+  letter-spacing: -0.02em;
+  color: var(--text);
+}
+
+.tayo {
+  color: var(--cyan);
+  text-shadow: 0 0 0.3em color-mix(in srgb, var(--cyan) 55%, transparent);
 }

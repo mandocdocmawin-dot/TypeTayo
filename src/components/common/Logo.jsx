@@ -5,8 +5,11 @@ import styles from './Logo.module.css';
 
 export default function Logo({ height = 40 }) {
   return (
-    <Link to="/" className={styles.logo} aria-label="TypeTayo home">
-      <img src={logo} alt="TypeTayo" style={{ height }} />
+    <Link to="/" className={styles.logo} aria-label="TypeTayo home" style={{ '--h': `${height}px` }}>
+      <img src={logo} alt="" className={styles.icon} />
+      <span aria-hidden="true" className={styles.mark}>
+        Type<span className={styles.tayo}>Tayo</span>
+      </span>
     </Link>
   );
 }

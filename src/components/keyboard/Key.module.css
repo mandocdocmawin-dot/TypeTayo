@@ -1,28 +1,56 @@
-/* The slot carries the gap as padding, so key widths stay proportional in every row. */
+/* components/keyboard/Key.module.css */
+
+/* Ang slot ang may dalang gap bilang padding, kaya proporsyonal ang lapad ng keys sa bawat row. */
 .slot {
   flex: var(--w) 1 0;
   min-width: 0;
-  height: var(--u); /* every row is exactly one key-unit tall */
+  height: var(--u); 
   padding: calc(var(--key-gap) / 2);
 }
 
 .cap {
-  font-size: clamp(0.7rem, 2.1cqw, 1.3rem);   /* was 0.55rem / 1.9cqw / 0.9rem */
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  height: 100%;
+  border: 1px solid var(--key-border);
   border-radius: calc(var(--radius-sm) * 1.1);
+  background: var(--key-bg);
+  color: var(--key-text);
+  font-family: var(--font-ui);
+  font-size: clamp(0.7rem, 2.1cqw, 1.3rem);
+  font-weight: var(--fw-bold);
+  line-height: 1;
+  transition:
+    background-color var(--dur-fast) var(--ease),
+    border-color var(--dur-fast) var(--ease),
+    color var(--dur-fast) var(--ease),
+    box-shadow var(--dur-base) var(--ease);
 }
 
+.label {
+  max-width: 100%;
+  overflow: hidden;
+  white-space: nowrap;
+}
+
+/* Tab, Shift, Enter, Ctrl, Alt, Caps Lock, Backspace */
+.special .label {
+  font-size: 0.72em;
+  font-weight: var(--fw-regular);
+}
+
+/* Simbolong lalabas sa ibabaw kapag kailangan ng Shift */
 .top {
   margin-bottom: 2px;
   font-size: 0.8em;
   opacity: 0.75;
 }
 
-.special .label {
-  font-size: 0.72em;
-  white-space: nowrap;
-}
-
-/* The next key to press, and the Shift key when one is needed */
+/* Ang susunod na key na dapat pindutin, at ang Shift kapag kailangan */
 .active {
   z-index: 1;
   color: var(--cyan);
