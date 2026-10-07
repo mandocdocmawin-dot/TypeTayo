@@ -1,4 +1,3 @@
-// hooks/useGame.js
 import { useReducer, useRef, useState, useEffect, useCallback } from 'react';
 import { gameReducer, initialState } from '../game/gameReducer';
 import { createPicker } from '../game/wordPicker';
@@ -15,7 +14,8 @@ const BONUS_MS = BONUS_SECONDS * 1000;
 
 export default function useGame(level) {
   const [state, dispatch] = useReducer(gameReducer, initialState);
-  const [runningMs, setRunningMs] = useState(START_MS); // oras na natitira habang playing
+  const [runningMs, setRunningMs] = useState(START_MS);
+  const [preview, setPreview] = useState('');
 
   const pickerRef = useRef(null);
   const stateRef = useRef(state);
@@ -23,14 +23,20 @@ export default function useGame(level) {
     stateRef.current = state;
   }, [state]);
 
-  // 1. Simula ng laro
-  const start = useCallback(() => {
+  const prepare = useCallback(() => {
     pickerRef.current = createPicker(WORDS[level]);
-    setRunningMs(START_MS);
-    dispatch({ type: 'START', level, firstWord: pickerRef.current.next() });
+    setPreview(pickerRef.current.next());
   }, [level]);
 
-  // 2. Countdown 3-2-1, tapos BEGIN
+  useEffect(() => {
+    if (state.status === 'idle' || state.status === 'finished') prepare();
+  }, [state.status, prepare]);
+
+  const start = useCallback(() => {
+    setRunningMs(START_MS);
+    dispatch({ type: 'START', level, firstWord: preview });
+  }, [level, preview]);
+
   useEffect(() => {
     if (state.status !== 'countdown') return;
     if (state.countdown === 0) {
@@ -41,7 +47,6 @@ export default function useGame(level) {
     return () => clearTimeout(id);
   }, [state.status, state.countdown]);
 
-  // 3. Timer loop: nagpapakita ng oras at nagta-trigger ng FINISH
   useEffect(() => {
     if (state.status !== 'playing') return;
     let raf;
@@ -57,7 +62,7 @@ export default function useGame(level) {
         }
         if (now - last >= 100) {
           last = now;
-          setRunningMs(endsAt - now); // ~10 beses/segundo lang, hindi 60
+          setRunningMs(endsAt - now);
         }
       }
       raf = requestAnimationFrame(loop);
@@ -66,7 +71,6 @@ export default function useGame(level) {
     return () => cancelAnimationFrame(raf);
   }, [state.status]);
 
-  // 4. Auto-pause kapag nawala ang focus
   useEffect(() => {
     if (state.status !== 'playing') return;
     const pause = () => dispatch({ type: 'PAUSE', now: performance.now() });
@@ -79,7 +83,6 @@ export default function useGame(level) {
     };
   }, [state.status]);
 
-  // 5. Keyboard: tinatawag lang ang picker.next() kapag matatapos na ang word
   const onKey = useCallback((key) => {
     const s = stateRef.current;
     const completes = key === s.word[s.index] && s.index + 1 === s.word.length;
@@ -96,12 +99,12 @@ export default function useGame(level) {
   const resume = useCallback(() => dispatch({ type: 'RESUME', now: performance.now() }), []);
   const quit = useCallback(() => dispatch({ type: 'RESET' }), []);
 
-  // Derived values
   const { status } = state;
+  const ready = status === 'idle' || status === 'finished';
+
   const remainingMs =
     status === 'finished' ? 0 : status === 'paused' ? state.remainingMs : runningMs;
 
-  // oras na naglaro = kabuuang nakuhang oras - natitira
   const elapsedMs =
     status === 'finished'
       ? state.playedMs
@@ -114,15 +117,14 @@ export default function useGame(level) {
     status,
     level: state.level,
     countdown: state.countdown,
-    word: state.word,
-    index: state.index,
+    word: ready ? preview : state.word,
+    index: ready ? 0 : state.index,
     score: state.score,
     errors: state.errors,
     bonusCount: state.bonusCount,
     remainingMs,
     wpm,
     accuracy,
-    // handa na para sa submitScore (Section 10 ng plan)
     result:
       status === 'finished'
         ? {

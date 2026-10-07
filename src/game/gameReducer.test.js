@@ -1,6 +1,7 @@
 import { describe, it, expect } from 'vitest';
 import { gameReducer, initialState } from './gameReducer';
-import { START_SECONDS, BONUS_SECONDS, COUNTDOWN_SECONDS } from './config';
+import { START_SECONDS, BONUS_SECONDS, COUNTDOWN_SECONDS, WORDS_PER_STAGE } from './config';
+import { TOTAL_WORDS } from './stages';
 
 const run = (state, ...actions) => actions.reduce(gameReducer, state);
 
@@ -11,6 +12,11 @@ const playing = (word = 'ab') =>
     { type: 'START', level: 'easy', firstWord: word },
     { type: 'BEGIN', now: 1000 }
   );
+
+const atScore = (score, word = 'ab') => ({ ...playing(word), score });
+const STAGE3_START = WORDS_PER_STAGE[0] + WORDS_PER_STAGE[1];
+const finishWord = (s) =>
+  run(s, { type: 'KEY', key: 'a', now: 2000 }, { type: 'KEY', key: 'b', now: 3000, nextWord: 'cd' });
 
 describe('start flow', () => {
   it('START goes to countdown with level and first word', () => {
@@ -79,6 +85,37 @@ describe('typing', () => {
     const out = gameReducer(s, { type: 'KEY', key: 'a', now: s.endsAt });
     expect(out.status).toBe('finished');
     expect(out.correctKeys).toBe(0);
+  });
+});
+
+describe('stages', () => {
+  it('still gives +3s on the last word of stage 2', () => {
+    const before = atScore(STAGE3_START - 1);
+    const s = finishWord(before);
+    expect(s.endsAt).toBe(before.endsAt + BONUS_SECONDS * 1000);
+    expect(s.bonusCount).toBe(1);
+  });
+
+  it('gives no bonus from stage 3', () => {
+    const before = atScore(STAGE3_START);
+    const s = finishWord(before);
+    expect(s.score).toBe(STAGE3_START + 1);
+    expect(s.endsAt).toBe(before.endsAt);
+    expect(s.bonusCount).toBe(0);
+  });
+
+  it('finishes as completed after the last word of the last stage', () => {
+    const s = finishWord(atScore(TOTAL_WORDS - 1));
+    expect(s.status).toBe('finished');
+    expect(s.completed).toBe(true);
+    expect(s.score).toBe(TOTAL_WORDS);
+    expect(s.playedMs).toBe(2000);
+  });
+
+  it('a timeout finish is not completed', () => {
+    const s = run(playing(), { type: 'FINISH', now: 31000 });
+    expect(s.status).toBe('finished');
+    expect(s.completed).toBe(false);
   });
 });
 

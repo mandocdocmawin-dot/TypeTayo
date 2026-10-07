@@ -1,11 +1,11 @@
 // game/gameReducer.js
 import {
   START_SECONDS,
-  BONUS_SECONDS,
   COUNTDOWN_SECONDS,
   MAX_SECONDS,
   BONUS_ONLY_IF_CLEAN,
 } from './config';
+import { stageForScore, bonusSecondsForStage, isComplete } from './stages';
 
 export const initialState = {
   status: 'idle', // idle | countdown | playing | paused | finished
@@ -28,6 +28,7 @@ export const initialState = {
   errors: 0,
   wordHadError: false,
   bonusCount: 0,
+  completed: false,
 };
 
 function finish(state, now) {
@@ -65,25 +66,31 @@ function handleKey(state, { key, now, nextWord }) {
   if (next.index < state.word.length) return next;
 
   // natapos ang word
+  const bonus = bonusSecondsForStage(stageForScore(state.score));
   let endsAt = state.endsAt;
   let bonusCount = state.bonusCount;
-  if (!BONUS_ONLY_IF_CLEAN || !state.wordHadError) {
-    endsAt += BONUS_SECONDS * 1000;
+  if (bonus > 0 && (!BONUS_ONLY_IF_CLEAN || !state.wordHadError)) {
+    endsAt += bonus * 1000;
     bonusCount += 1;
   }
   if (MAX_SECONDS !== null) {
     endsAt = Math.min(endsAt, now + MAX_SECONDS * 1000);
   }
 
-  return {
+  const score = state.score + 1;
+  const done = {
     ...next,
-    score: state.score + 1,
+    score,
     word: nextWord ?? state.word,
     index: 0,
     wordHadError: false,
     endsAt,
     bonusCount,
   };
+
+  // last word of the last stage: the round is complete
+  if (isComplete(score)) return { ...finish(done, now), completed: true };
+  return done;
 }
 
 export function gameReducer(state, action) {
