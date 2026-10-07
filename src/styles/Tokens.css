@@ -25,6 +25,11 @@
   /* Text color to place ON an accent-filled surface (buttons, badges) */
   --on-accent: #0A1024;
 
+  /* ---- Color: leaderboard medals (rank 1 to 3) ---- */
+  --medal-gold: #F5B83D;
+  --medal-silver: #B8C4E0;
+  --medal-bronze: #D08A57;
+
   /* ---- Color: level aliases ---- */
   --level-easy: var(--green);
   --level-medium: var(--cyan);
