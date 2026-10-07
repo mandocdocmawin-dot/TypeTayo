@@ -1,6 +1,6 @@
 // components/landing/HowItWorks.jsx
 import SectionTitle from '../common/SectionTitle';
-import { BONUS_SECONDS } from '../../game/config';
+import { BONUS_SECONDS, NO_BONUS_FROM_STAGE } from '../../game/config';
 import styles from './HowItWorks.module.css';
 
 function PointerIcon() {
@@ -29,7 +29,7 @@ const STEPS = [
   { text: 'Read the highlighted letter', icon: <span className={styles.keycap}>T</span> },
   { text: 'Follow the glowing finger', icon: <PointerIcon /> },
   {
-    text: `Finish words to earn +${BONUS_SECONDS}s`,
+    text: `Finish words in Levels 1-${NO_BONUS_FROM_STAGE - 1} to earn +${BONUS_SECONDS}s`,
     icon: (
       <>
         <span className={styles.clock}><StopwatchIcon /></span>

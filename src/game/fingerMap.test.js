@@ -79,7 +79,8 @@ describe('fingerMap', () => {
   });
 
   it('covers every character in every word list', () => {
-    const chars = new Set([...easy, ...medium, ...hard].join('').split(''));
+    const words = [easy, medium, hard].flatMap((lists) => Object.values(lists).flat());
+    const chars = new Set(words.join('').split(''));
     const bad = [...chars].filter((c) => {
       const h = getHint(c);
       return !h || !h.keyId || !h.finger || (h.shiftKeyId && !h.shiftFinger);

@@ -45,6 +45,14 @@
 .level[data-level='medium'] { background: var(--level-medium); }
 .level[data-level='hard'] { background: var(--level-hard); }
 
+/* "Level N" sa loob ng badge, may maliit na divider sa kaliwa */
+.stage {
+  margin-left: var(--space-2);
+  padding-left: var(--space-2);
+  border-left: 1px solid color-mix(in srgb, var(--on-accent) 35%, transparent);
+  text-transform: none;
+}
+
 /* ---- Stats ---- */
 .stats {
   display: grid;
@@ -73,40 +81,6 @@
   font-family: var(--font-mono);
   font-size: var(--fs-lg);
   font-weight: var(--fw-bold);
-}
-
-/* ---- Save form ---- */
-.save {
-  display: grid;
-  gap: var(--space-2);
-  margin-bottom: var(--space-5);
-}
-
-.save label {
-  font-size: var(--fs-sm);
-  color: var(--text-muted);
-}
-
-.saveRow {
-  display: flex;
-  gap: var(--space-2);
-}
-
-.saveRow input {
-  flex: 1;
-  min-width: 0;
-  padding: var(--space-2) var(--space-3);
-  font: inherit;
-  color: var(--text);
-  background: var(--bg);
-  border: 1px solid var(--border);
-  border-radius: var(--radius-sm);
-}
-
-.saveRow input:focus-visible {
-  outline: none;
-  border-color: var(--cyan);
-  box-shadow: var(--glow-cyan);
 }
 
 /* ---- Buttons ---- */
@@ -161,10 +135,6 @@
 @media (max-width: 480px) {
   .stats {
     grid-template-columns: repeat(2, 1fr);
-  }
-
-  .saveRow {
-    flex-direction: column;
   }
 }
 

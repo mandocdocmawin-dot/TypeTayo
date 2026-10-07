@@ -1,7 +1,7 @@
 // components/landing/LevelCard.jsx
 import { Link } from 'react-router-dom';
 import { ClockIcon, TrophyIcon, PlayIcon } from '../common/Icons';
-import { START_SECONDS, BONUS_SECONDS } from '../../game/config';
+import { START_SECONDS, BONUS_SECONDS, NO_BONUS_FROM_STAGE } from '../../game/config';
 import styles from './LevelCard.module.css';
 
 // previewIndex = how many letters of the preview word already look "typed"
@@ -28,7 +28,7 @@ export default function LevelCard({ level, title, tag, description, preview, pre
       </div>
 
       <ul className={styles.facts}>
-        <li><ClockIcon /> {START_SECONDS}s + {BONUS_SECONDS}s per word</li>
+        <li><ClockIcon /> {START_SECONDS}s, +{BONUS_SECONDS}s per word in Levels 1-{NO_BONUS_FROM_STAGE - 1}</li>
         <li><TrophyIcon /> Personal best: {best ?? '--'}</li>
       </ul>
 

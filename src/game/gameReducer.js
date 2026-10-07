@@ -32,11 +32,11 @@ export const initialState = {
 };
 
 function finish(state, now) {
-  // huwag lumampas sa endsAt kahit nahuli ang rAF
   const end = Math.min(now, state.endsAt);
   return {
     ...state,
     status: 'finished',
+    remainingMs: Math.max(0, state.endsAt - now),
     playedMs: Math.max(0, end - state.startedAt - state.pausedMs),
   };
 }

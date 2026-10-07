@@ -2,6 +2,8 @@
   display: flex;
   align-items: center;
   justify-content: center;
+  min-width: min(100%, 520px);
+  max-width: 100%;
   min-height: 9rem;
   padding: var(--space-5) var(--space-5);
   background: color-mix(in srgb, var(--bg-elevated) 70%, transparent);
@@ -39,6 +41,25 @@
     box-shadow var(--dur-fast) var(--ease),
     filter var(--dur-fast) var(--ease),
     opacity var(--dur-fast) var(--ease);
+}
+
+.group {
+  display: inline-flex;
+  gap: var(--space-2);
+}
+
+.space {
+  min-width: 1.1em;
+}
+
+.spaceMark {
+  width: 0.6em;
+  height: 0.3em;
+  margin-top: 0.4em;
+  border: 2px solid currentColor;
+  border-top: 0;
+  border-radius: 0 0 3px 3px;
+  opacity: 0.85;
 }
 
 .typed {

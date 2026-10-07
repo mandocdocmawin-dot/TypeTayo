@@ -2,15 +2,19 @@ import { useReducer, useRef, useState, useEffect, useCallback } from 'react';
 import { gameReducer, initialState } from '../game/gameReducer';
 import { createPicker } from '../game/wordPicker';
 import { calcWpm, calcAccuracy } from '../game/scoring';
-import { START_SECONDS, BONUS_SECONDS } from '../game/config';
+import { START_SECONDS, BONUS_SECONDS, MAX_STAGE } from '../game/config';
+import { stageForScore, isComplete } from '../game/stages';
 import useKeyCapture from './useKeyCapture';
 import easy from '../data/words/easy';
 import medium from '../data/words/medium';
 import hard from '../data/words/hard';
 
+// Each difficulty has one word pool per stage: WORDS.easy[1] .. WORDS.easy[5]
 const WORDS = { easy, medium, hard };
 const START_MS = START_SECONDS * 1000;
 const BONUS_MS = BONUS_SECONDS * 1000;
+
+const poolFor = (level, stage) => WORDS[level][Math.min(stage, MAX_STAGE)];
 
 export default function useGame(level) {
   const [state, dispatch] = useReducer(gameReducer, initialState);
@@ -23,8 +27,10 @@ export default function useGame(level) {
     stateRef.current = state;
   }, [state]);
 
+  // Picker for stage 1. The first word is shown as a preview and becomes the
+  // first word of the round when Start is pressed.
   const prepare = useCallback(() => {
-    pickerRef.current = createPicker(WORDS[level]);
+    pickerRef.current = createPicker(poolFor(level, 1));
     setPreview(pickerRef.current.next());
   }, [level]);
 
@@ -83,16 +89,26 @@ export default function useGame(level) {
     };
   }, [state.status]);
 
-  const onKey = useCallback((key) => {
-    const s = stateRef.current;
-    const completes = key === s.word[s.index] && s.index + 1 === s.word.length;
-    dispatch({
-      type: 'KEY',
-      key,
-      now: performance.now(),
-      nextWord: completes ? pickerRef.current.next() : null,
-    });
-  }, []);
+  const onKey = useCallback(
+    (key) => {
+      const s = stateRef.current;
+      const completes = key === s.word[s.index] && s.index + 1 === s.word.length;
+
+      let nextWord = null;
+      if (completes) {
+        const newScore = s.score + 1;
+        if (!isComplete(newScore)) {
+          const stage = stageForScore(s.score);
+          const nextStage = stageForScore(newScore);
+          if (nextStage !== stage) pickerRef.current = createPicker(poolFor(level, nextStage));
+          nextWord = pickerRef.current.next();
+        }
+      }
+
+      dispatch({ type: 'KEY', key, now: performance.now(), nextWord });
+    },
+    [level]
+  );
   useKeyCapture(onKey, state.status === 'playing');
 
   const pause = useCallback(() => dispatch({ type: 'PAUSE', now: performance.now() }), []);
@@ -103,7 +119,7 @@ export default function useGame(level) {
   const ready = status === 'idle' || status === 'finished';
 
   const remainingMs =
-    status === 'finished' ? 0 : status === 'paused' ? state.remainingMs : runningMs;
+    status === 'finished' || status === 'paused' ? state.remainingMs : runningMs;
 
   const elapsedMs =
     status === 'finished'
@@ -113,9 +129,14 @@ export default function useGame(level) {
   const wpm = elapsedMs < 1000 ? 0 : calcWpm(state.correctKeys, elapsedMs);
   const accuracy = calcAccuracy(state.correctKeys, state.totalKeys);
 
+  // Level 1..MAX_STAGE inside the difficulty. After a round it is the stage reached.
+  const stage = stageForScore(state.score);
+
   return {
     status,
     level: state.level,
+    stage,
+    completed: state.completed,
     countdown: state.countdown,
     word: ready ? preview : state.word,
     index: ready ? 0 : state.index,
@@ -128,13 +149,15 @@ export default function useGame(level) {
     result:
       status === 'finished'
         ? {
-            level: state.level,
-            score: state.score,
-            wpm,
-            accuracy,
-            durationMs: state.playedMs,
-            keystrokes: state.totalKeys,
-          }
+          level: state.level,
+          stage,
+          completed: state.completed,
+          score: state.score,
+          wpm,
+          accuracy,
+          durationMs: state.playedMs,
+          keystrokes: state.totalKeys,
+        }
         : null,
     start,
     pause,

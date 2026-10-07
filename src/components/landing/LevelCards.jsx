@@ -5,9 +5,9 @@ import LevelCard from './LevelCard';
 import styles from './LevelCards.module.css';
 
 const CARDS = [
-  { level: 'easy', title: 'Easy', tag: 'Great for beginners', description: 'Short words, home row keys', preview: 'sadfall', previewIndex: 3 },
-  { level: 'medium', title: 'Medium', tag: 'Most popular', description: 'Longer words, all letters', preview: 'keyboard', previewIndex: 3 },
-  { level: 'hard', title: 'Hard', tag: 'For speed demons', description: 'Capitals, numbers and symbols', preview: 'Hello#2026', previewIndex: 5 },
+  { level: 'easy', title: 'Easy', tag: 'Great for beginners', description: 'Short words, starting from the home row', preview: 'sadfall', previewIndex: 3 },
+  { level: 'medium', title: 'Medium', tag: 'Step it up', description: 'Capitals, numbers and short phrases', preview: 'Fat Finger11', previewIndex: 4 },
+  { level: 'hard', title: 'Hard', tag: 'For speed demons', description: 'Capitals, numbers and symbols in everyday words', preview: 'Hello#2026', previewIndex: 5 },
 ];
 
 export default function LevelCards() {

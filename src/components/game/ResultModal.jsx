@@ -66,8 +66,13 @@ export default function ResultModal({
         aria-labelledby="result-title"
         onClick={(e) => e.stopPropagation()}
       >
-        <h2 id="result-title" className={styles.title}>Time is up!</h2>
-        <p className={styles.level} data-level={result.level}>{result.level}</p>
+        <h2 id="result-title" className={styles.title}>
+          {result.completed ? 'You finished all levels!' : 'Time is up!'}
+        </h2>
+        <p className={styles.level} data-level={result.level}>
+          {result.level}
+          <span className={styles.stage}>Level {result.stage}</span>
+        </p>
 
         <dl className={styles.stats}>
           <div><dt>Score</dt><dd>{result.score}</dd></div>

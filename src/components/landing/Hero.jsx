@@ -44,7 +44,7 @@ export default function Hero() {
           <span className={styles.tagline}>Beat the clock.</span>
         </h1>
         <p className={styles.sub}>
-          Start with {START_SECONDS} seconds. Finish a word, earn +{BONUS_SECONDS} seconds.
+          Start with {START_SECONDS} seconds. Finish a word in the early levels, earn +{BONUS_SECONDS} seconds.
           <br />
           See your hands guide every key.
         </p>

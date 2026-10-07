@@ -7,7 +7,7 @@ const PAGES = {
   about: {
     title: 'About TypeTayo',
     body: [
-      'TypeTayo is a free typing game. Pick a level, type each word before the clock runs out, and earn extra seconds for every word you finish.',
+      'TypeTayo is a free typing game. Pick a difficulty, type each word before the clock runs out, and work your way through five levels. The early levels give you extra seconds for every word you finish.',
       'The on-screen keyboard and hands show which finger to use, so you build good habits while you play.',
     ],
   },

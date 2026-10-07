@@ -19,7 +19,7 @@ export default function Play() {
   const navigate = useNavigate();
   const valid = LEVELS.includes(level);
   const game = useGame(valid ? level : 'easy');
-  const { status, start, pause, resume, quit } = game;
+  const { status, word, index, start, pause, resume, quit } = game;
   const [showHands, setShowHands] = useLocalStorage('typetayo:showHands', true);
   const [dismissed, setDismissed] = useState(false);
 
@@ -47,6 +47,7 @@ export default function Play() {
     function onToggle(e) {
       if (e.code !== 'Space' || !e.shiftKey) return;
       if (e.ctrlKey || e.altKey || e.metaKey) return;
+      if (status === 'playing' && word[index] === ' ') return;
 
       e.preventDefault();
       e.stopImmediatePropagation();
@@ -61,13 +62,13 @@ export default function Play() {
 
     window.addEventListener('keydown', onToggle, { capture: true });
     return () => window.removeEventListener('keydown', onToggle, { capture: true });
-  }, [status, start, pause, resume]);
+  }, [status, word, index, start, pause, resume]);
 
   if (!valid) {
     return <p>Unknown level: {level}</p>;
   }
 
-  const { word, index, remainingMs, countdown, result } = game;
+  const { remainingMs, countdown, result } = game;
   const ready = status === 'idle' || status === 'finished';
   const guiding = status === 'countdown' || status === 'playing';
   const hint = guiding ? getHint(word[index]) : null;
@@ -88,6 +89,7 @@ export default function Play() {
 
         <div className={styles.right}>
           <span className={styles.badge} data-level={level}>{level}</span>
+          <span className={styles.stage}>Level {game.stage}</span>
           <ul className={styles.stats}>
             <li><span>score</span><b>{game.score}</b></li>
             <li><span>wpm</span><b>{game.wpm.toFixed(0)}</b></li>
@@ -109,7 +111,7 @@ export default function Play() {
           {status === 'countdown' && <span key={countdown} className={styles.count}>{countdown}</span>}
           {status === 'playing' && 'Press the highlighted key'}
           {status === 'paused' && 'Paused. Press Shift + Space to continue.'}
-          {status === 'finished' && 'Time is up!'}
+          {status === 'finished' && (game.completed ? 'You finished all levels!' : 'Time is up!')}
         </p>
       </div>
 
