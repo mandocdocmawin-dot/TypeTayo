@@ -2,6 +2,8 @@
 // Shows the current word as letter tiles: typed (green), current (cyan), upcoming (blurred).
 // Shakes and flashes red whenever `errors` goes up.
 import { useState } from 'react';
+import { colorForChar } from '../../game/fingerColors';
+import { getHint } from '../../game/fingerMap';
 import styles from './WordBox.module.css';
 
 export default function WordBox({ word, index, errors, status }) {
@@ -38,9 +40,15 @@ export default function WordBox({ word, index, errors, status }) {
       >
         {letters.map((ch, i) => {
           const state = i < index ? styles.typed : i === index ? styles.current : styles.upcoming;
+          const needsShift = i === index && Boolean(getHint(ch)?.shiftKeyId);
           return (
-            <span key={i} className={`${styles.tile} ${state}`}>
+            <span
+              key={i}
+              className={`${styles.tile} ${state}`}
+              style={{ '--tile-color': colorForChar(ch) }}
+            >
               {ch}
+              {needsShift && <small className={styles.badge}>Shift</small>}
             </span>
           );
         })}

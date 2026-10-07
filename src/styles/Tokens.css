@@ -17,10 +17,14 @@
   --text-muted: #9FB0D9;
 
   /* ---- Color: accents ---- */
-  --cyan: #1FD1FF;      /* main accent, current letter, Medium */
-  --orange: #FFB020;    /* +3s bonus, Hard, sun logo */
-  --green: #4ADE80;     /* typed letters, Easy */
-  --danger: #FF5C7A;    /* wrong key */
+  --cyan: #1FD1FF;
+  /* main accent, current letter, Medium */
+  --orange: #FFB020;
+  /* +3s bonus, Hard, sun logo */
+  --green: #4ADE80;
+  /* typed letters, Easy */
+  --danger: #FF5C7A;
+  /* wrong key */
 
   /* Text color to place ON an accent-filled surface (buttons, badges) */
   --on-accent: #0A1024;
@@ -52,6 +56,13 @@
   --finger-idle: var(--border);
   --finger-active: var(--cyan);
 
+  /* ---- Finger colors (same on both hands) ---- */
+  --finger-pinky: #C084FC;
+  --finger-ring: #F472B6;
+  --finger-middle: #FACC15;
+  --finger-index: #5BA8FF;
+  --finger-thumb: var(--text-muted);
+
   /* ---- Radius ---- */
   --radius: 14px;
   --radius-sm: 8px;
@@ -62,14 +73,22 @@
   --font-ui: 'Nunito Variable', 'Nunito', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   --font-mono: 'JetBrains Mono Variable', 'JetBrains Mono', ui-monospace, 'SF Mono', Menlo, Consolas, monospace;
 
-  --fs-xs: 0.8125rem;   /* 13px */
-  --fs-sm: 0.9375rem;   /* 15px */
-  --fs-md: 1rem;        /* 16px */
-  --fs-lg: 1.25rem;     /* 20px */
-  --fs-xl: 1.75rem;     /* 28px */
-  --fs-2xl: 2.5rem;     /* 40px */
-  --fs-3xl: clamp(2.5rem, 6vw, 4.5rem); /* hero headline */
-  --fs-word: clamp(1.75rem, 5vw, 3rem); /* letter tiles in the word box */
+  --fs-xs: 0.8125rem;
+  /* 13px */
+  --fs-sm: 0.9375rem;
+  /* 15px */
+  --fs-md: 1rem;
+  /* 16px */
+  --fs-lg: 1.25rem;
+  /* 20px */
+  --fs-xl: 1.75rem;
+  /* 28px */
+  --fs-2xl: 2.5rem;
+  /* 40px */
+  --fs-3xl: clamp(2.5rem, 6vw, 4.5rem);
+  /* hero headline */
+  --fs-word: clamp(1.75rem, 5vw, 3rem);
+  /* letter tiles in the word box */
   --fs-timer: clamp(2.5rem, 7vw, 4rem);
 
   --fw-regular: 500;
@@ -92,7 +111,7 @@
   /* ---- Layout ---- */
   --container: 1120px;
   --nav-height: 76px;
-  
+
   /* ---- Shadows ---- */
   --shadow-card: 0 10px 30px rgba(0, 0, 0, 0.35);
   --shadow-pop: 0 6px 18px rgba(0, 0, 0, 0.4);
@@ -131,6 +150,11 @@
   --orange: #C97A00;
   --green: #1C9C50;
   --danger: #D32F52;
+
+  --finger-pinky: #9333EA;
+  --finger-ring: #DB2777;
+  --finger-middle: #B45309;
+  --finger-index: #2563EB;
 
   --on-accent: #FFFFFF;
 

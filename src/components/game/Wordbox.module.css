@@ -22,6 +22,7 @@
 
 .tile {
   display: grid;
+  position: relative;
   place-items: center;
   min-width: 1.5em;
   height: 1.9em;
@@ -58,6 +59,23 @@
 .upcoming {
   filter: blur(var(--blur-upcoming));
   opacity: var(--opacity-upcoming);
+}
+
+.badge {
+  position: absolute;
+  top: -0.6rem;
+  left: 50%;
+  transform: translateX(-50%);
+  padding: 0.1rem 0.45rem;
+  font-family: var(--font-ui);
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-bold);
+  line-height: var(--lh-tight);
+  color: var(--on-accent);
+  background: var(--orange);
+  border-radius: var(--radius-pill);
+  box-shadow: var(--shadow-pop);
+  pointer-events: none;
 }
 
 /* Whole word is hidden while paused so nobody reads ahead on the clock's time */
