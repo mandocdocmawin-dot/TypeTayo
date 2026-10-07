@@ -1,0 +1,54 @@
+/* components/layout/ThemeToggle.module.css */
+.toggle {
+  position: relative;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  align-items: center;
+  width: 4.25rem;
+  height: 2.125rem;
+  padding: 3px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  background: var(--bg-elevated);
+  transition: border-color var(--dur-base) var(--ease);
+}
+
+.toggle:hover {
+  border-color: var(--cyan);
+}
+
+/* Ang bilog na gumagalaw sa ilalim ng aktibong icon */
+.thumb {
+  position: absolute;
+  top: 3px;
+  bottom: 3px;
+  left: 3px;
+  width: calc(50% - 3px);
+  border-radius: var(--radius-pill);
+  background: var(--cyan);
+  box-shadow: 0 0 12px color-mix(in srgb, var(--cyan) 55%, transparent);
+  transition: transform var(--dur-base) var(--ease);
+}
+
+/* Dark theme: nasa ilalim ng buwan (kanan). Light theme: nasa ilalim ng araw (kaliwa). */
+.toggle[data-theme-state='dark'] .thumb {
+  transform: translateX(100%);
+}
+
+.toggle[data-theme-state='light'] .thumb {
+  transform: translateX(0);
+}
+
+.icon {
+  position: relative; /* para nasa ibabaw ng thumb */
+  display: grid;
+  place-items: center;
+  font-size: 1.05rem;
+  color: var(--text-muted);
+  transition: color var(--dur-base) var(--ease);
+}
+
+/* Icon na nasa ilalim ng thumb */
+.icon[data-on='true'] {
+  color: var(--on-accent);
+}

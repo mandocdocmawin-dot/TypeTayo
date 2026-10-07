@@ -9,7 +9,7 @@ export default function Navbar() {
   return (
     <header className={styles.nav}>
       <div className={`container ${styles.inner}`}>
-        <Logo />
+        <Logo height={52} />
         <nav className={styles.links} aria-label="Main">
           {/* Layout scrolls to #how-it-works when the hash is present */}
           <Link to="/#how-it-works" className={styles.link}>How to Play</Link>

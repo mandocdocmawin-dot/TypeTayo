@@ -1,0 +1,98 @@
+/* components/landing/Hero.module.css */
+.hero {
+  position: relative;
+  overflow: hidden;
+  padding-top: var(--space-7);
+  border-bottom: 1px solid var(--border);
+  background:
+    radial-gradient(
+      ellipse 60% 50% at 50% 0%,
+      var(--cyan-soft),
+      transparent 70%
+    ),
+    var(--bg);
+}
+
+/* ---- Headline ---- */
+.text {
+  text-align: center;
+}
+
+.title {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-2);
+  font-size: var(--fs-3xl);
+}
+
+.brand {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.06em;
+  line-height: 1;
+  letter-spacing: -0.02em;
+}
+
+.tayo {
+  color: var(--cyan);
+  text-shadow: 0 0 0.3em color-mix(in srgb, var(--cyan) 55%, transparent);
+}
+
+.sun {
+  font-size: 0.8em;
+  color: var(--orange);
+  filter: drop-shadow(0 0 0.15em color-mix(in srgb, var(--orange) 45%, transparent));
+}
+
+.sun circle {
+  fill: currentColor;
+}
+
+.tagline {
+  font-size: 0.55em;
+  color: var(--text);
+}
+
+.sub {
+  margin-top: var(--space-4);
+  font-size: var(--fs-lg);
+  font-weight: var(--fw-regular);
+  color: color-mix(in srgb, var(--cyan) 70%, var(--text));
+}
+
+/* ---- Looping demo ---- */
+.demo {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-6);
+  margin-top: var(--space-6);
+}
+
+.word {
+  display: flex;
+  justify-content: center;
+  max-width: 100%;
+  padding-inline: var(--space-4);
+}
+
+.board {
+  width: 100%;
+  max-width: 860px;
+  padding-inline: var(--space-4);
+}
+
+@media (max-width: 719px) {
+  .hero {
+    padding-top: var(--space-6);
+  }
+
+  .sub {
+    font-size: var(--fs-md);
+  }
+
+  .board {
+    padding-inline: var(--space-2);
+  }
+}

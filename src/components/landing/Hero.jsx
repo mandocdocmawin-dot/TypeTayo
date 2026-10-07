@@ -8,6 +8,7 @@ import Hands, { HANDS_EXTRA_UNITS } from '../keyboard/Hands';
 import { getHint } from '../../game/fingerMap';
 import { START_SECONDS, BONUS_SECONDS } from '../../game/config';
 import styles from './Hero.module.css';
+import { SunIcon } from '../common/Icons';
 
 const DEMO_WORD = 'keyboard';
 const STEP_MS = 850;
@@ -36,7 +37,11 @@ export default function Hero() {
     <section className={styles.hero} aria-labelledby="hero-title">
       <div className={`container ${styles.text}`}>
         <h1 id="hero-title" className={styles.title}>
-          Type fast. <span>Beat the clock.</span>
+          <span className={styles.brand}>
+            Type<span className={styles.tayo}>Tayo</span>
+            <SunIcon className={styles.sun} />
+          </span>
+          <span className={styles.tagline}>Beat the clock.</span>
         </h1>
         <p className={styles.sub}>
           Start with {START_SECONDS} seconds. Finish a word, earn +{BONUS_SECONDS} seconds.

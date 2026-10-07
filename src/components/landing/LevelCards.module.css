@@ -1,0 +1,16 @@
+/* components/landing/LevelCards.module.css */
+.section {
+  padding-block: var(--space-8) var(--space-7);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: var(--space-5);
+}
+
+@media (min-width: 900px) {
+  .grid {
+    grid-template-columns: repeat(3, 1fr);
+  }
+}

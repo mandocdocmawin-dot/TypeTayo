@@ -1,0 +1,114 @@
+/* components/leaderboard/LeaderboardTable.module.css */
+
+/* Sa mobile, mag-scroll pakanan imbes na masira ang table */
+.scroll {
+  overflow-x: auto;
+}
+
+.table {
+  width: 100%;
+  min-width: 480px;
+  border-collapse: separate;
+  border-spacing: 0 var(--space-1);
+  font-size: var(--fs-sm);
+  text-align: left;
+}
+
+.table th,
+.table td {
+  padding: var(--space-2) var(--space-4);
+  white-space: nowrap;
+}
+
+/* ---- Header ---- */
+.table th {
+  font-size: var(--fs-xs);
+  font-weight: var(--fw-bold);
+  color: var(--text-muted);
+}
+
+/* ---- Rows ---- */
+.table tbody tr {
+  background: color-mix(in srgb, var(--bg) 55%, transparent);
+  transition: background-color var(--dur-fast) var(--ease);
+}
+
+.table tbody tr:hover {
+  background: var(--cyan-soft);
+}
+
+.table td:first-child {
+  border-radius: var(--radius-sm) 0 0 var(--radius-sm);
+}
+
+.table td:last-child {
+  border-radius: 0 var(--radius-sm) var(--radius-sm) 0;
+}
+
+/* Player column: kunin ang sobrang lapad at putulin kung mahaba */
+.player {
+  width: 100%;
+  max-width: 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  font-weight: var(--fw-bold);
+}
+
+/* ---- Rank badge ---- */
+.rank {
+  display: inline-grid;
+  place-items: center;
+  min-width: 1.75rem;
+  height: 1.75rem;
+  border-radius: var(--radius-pill);
+  font-weight: var(--fw-bold);
+  font-variant-numeric: tabular-nums;
+}
+
+.rank[data-rank] {
+  color: var(--on-accent);
+  font-weight: var(--fw-black);
+}
+
+.rank[data-rank='1'] { background: var(--medal-gold); }
+.rank[data-rank='2'] { background: var(--medal-silver); }
+.rank[data-rank='3'] { background: var(--medal-bronze); }
+
+/* Pantay ang lapad ng mga numero */
+.table td:nth-child(n + 3) {
+  font-variant-numeric: tabular-nums;
+}
+
+/* ---- Empty / loading state ---- */
+.empty {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-3);
+  padding: var(--space-6) var(--space-4);
+  color: var(--text-muted);
+  text-align: center;
+}
+
+.empty b {
+  color: var(--text);
+}
+
+.emptyIcon {
+  font-size: 2.5rem;
+  color: var(--orange);
+}
+
+.cta {
+  padding: var(--space-2) var(--space-5);
+  border-radius: var(--radius-pill);
+  background: var(--cyan);
+  color: var(--on-accent);
+  font-weight: var(--fw-black);
+  text-transform: capitalize;
+  transition: transform var(--dur-fast) var(--ease);
+}
+
+.cta:hover {
+  transform: translateY(-2px);
+}

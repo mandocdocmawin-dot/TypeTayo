@@ -1,0 +1,45 @@
+/* pages/Leaderboard.module.css */
+.page {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+  padding-block: var(--space-7) var(--space-8);
+  text-align: center;
+}
+
+.title {
+  font-size: var(--fs-2xl);
+}
+
+.sub {
+  margin-bottom: var(--space-2);
+  color: var(--text-muted);
+  font-size: var(--fs-sm);
+}
+
+.panel {
+  width: 100%;
+  max-width: 860px;
+  margin-top: var(--space-3);
+  padding: var(--space-5);
+  border: 2px solid color-mix(in srgb, var(--cyan) 45%, var(--border));
+  border-radius: var(--radius-lg);
+  background: var(--bg-elevated);
+  box-shadow: var(--shadow-card);
+  text-align: left;
+}
+
+@media (max-width: 719px) {
+  .page {
+    padding-block: var(--space-6) var(--space-7);
+  }
+
+  .title {
+    font-size: var(--fs-xl);
+  }
+
+  .panel {
+    padding: var(--space-3);
+  }
+}

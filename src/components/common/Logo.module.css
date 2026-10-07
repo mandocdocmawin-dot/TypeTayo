@@ -1,0 +1,10 @@
+/* components/common/Logo.module.css */
+.logo {
+  display: inline-flex;
+  align-items: center;
+}
+
+.logo img {
+  width: auto;
+  object-fit: contain;
+}

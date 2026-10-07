@@ -7,7 +7,7 @@ export default function Footer() {
   return (
     <footer className={styles.footer}>
       <div className={`container ${styles.inner}`}>
-        <Logo height={32} />
+        <Logo height={60} />
         <p className={styles.made}>
           <span aria-hidden="true">♥</span> Made with love in the Philippines
         </p>

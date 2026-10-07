@@ -1,0 +1,55 @@
+/* components/layout/Navbar.module.css */
+.nav {
+  position: sticky;
+  top: 0;
+  z-index: var(--z-nav);
+  height: var(--nav-height);
+  border-bottom: 1px solid var(--border);
+  /* medyo transparent para makita ang content habang nag-scroll */
+  background: color-mix(in srgb, var(--bg) 85%, transparent);
+  backdrop-filter: blur(10px);
+}
+
+.nav img {
+  height: 40px !important; 
+}
+
+.inner {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: var(--space-4);
+  height: 100%;
+}
+
+.links {
+  display: flex;
+  align-items: center;
+  gap: var(--space-4);
+}
+
+/* May maliit na divider sa kanan ng bawat link, gaya ng design */
+.link {
+  padding-right: var(--space-4);
+  border-right: 1px solid var(--border);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
+  line-height: 1.6;
+  color: var(--text);
+  transition: color var(--dur-fast) var(--ease);
+}
+
+.link:hover {
+  color: var(--cyan);
+}
+
+@media (max-width: 719px) {
+  .links {
+    gap: var(--space-3);
+  }
+
+  .link {
+    padding-right: var(--space-3);
+    font-size: var(--fs-xs);
+  }
+}

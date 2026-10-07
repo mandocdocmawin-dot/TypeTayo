@@ -1,0 +1,159 @@
+/* components/landing/HowItWorks.module.css */
+.section {
+  padding-block: var(--space-7);
+}
+
+.steps {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-7);
+}
+
+.step {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: var(--space-4);
+  max-width: 240px;
+  text-align: left;
+}
+
+.step p {
+  color: var(--text-muted);
+  font-size: var(--fs-md);
+  line-height: 1.4;
+}
+
+.num {
+  margin-right: var(--space-1);
+  color: var(--text-muted);
+  font-weight: var(--fw-bold);
+}
+
+/* ---- Icon + numbered badge ---- */
+.visual {
+  position: relative;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 100%;
+  min-height: 96px;
+}
+
+.icon {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: var(--space-2);
+  font-size: 4rem;
+  color: var(--cyan);
+}
+
+/* Berdeng bilog sa kaliwang-ibaba ng icon */
+.badge {
+  position: absolute;
+  left: 0;
+  bottom: 0;
+  display: grid;
+  place-items: center;
+  width: 1.75rem;
+  height: 1.75rem;
+  border-radius: 50%;
+  background: var(--green);
+  color: var(--on-accent);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-black);
+  box-shadow: 0 0 12px color-mix(in srgb, var(--green) 55%, transparent);
+}
+
+/* ---- Step 1: keycap ---- */
+.keycap {
+  display: grid;
+  place-items: center;
+  width: 1.3em;
+  height: 1.3em;
+  border: 2px solid var(--cyan);
+  border-radius: 0.22em;
+  background:
+    linear-gradient(160deg, color-mix(in srgb, var(--cyan) 22%, transparent), var(--cyan-soft));
+  box-shadow:
+    var(--glow-cyan),
+    inset 0 0 14px color-mix(in srgb, var(--cyan) 25%, transparent);
+  font-family: var(--font-ui);
+  font-size: 0.5em;
+  font-weight: var(--fw-black);
+  color: var(--text);
+}
+
+/* ---- Step 2: pointer + glowing dot ---- */
+.pointer {
+  position: relative;
+  display: grid;
+  place-items: center;
+  color: var(--cyan);
+}
+
+.pointer svg {
+  filter: drop-shadow(0 0 6px color-mix(in srgb, var(--cyan) 50%, transparent));
+}
+
+.dot {
+  position: absolute;
+  top: 6%;
+  left: 24%;
+  width: 0.28em;
+  height: 0.28em;
+  border-radius: 50%;
+  background: var(--cyan);
+  box-shadow:
+    0 0 0 0.1em color-mix(in srgb, var(--cyan) 30%, transparent),
+    0 0 0.5em 0.15em color-mix(in srgb, var(--cyan) 70%, transparent);
+}
+
+/* ---- Step 3: stopwatch + bonus ---- */
+.clock {
+  display: grid;
+  place-items: center;
+  color: var(--orange);
+  filter: drop-shadow(0 0 8px color-mix(in srgb, var(--orange) 55%, transparent));
+}
+
+.bonus {
+  font-size: 0.4em;
+  font-weight: var(--fw-black);
+  color: var(--orange);
+  text-shadow: 0 0 10px color-mix(in srgb, var(--orange) 55%, transparent);
+}
+
+/* ---- Arrow sa pagitan ng steps ---- */
+.step:not(:last-child)::after {
+  content: '↓';
+  position: absolute;
+  bottom: calc(-1 * var(--space-7) + var(--space-2));
+  left: 50%;
+  transform: translateX(-50%);
+  color: var(--text-muted);
+  opacity: 0.7;
+  font-size: var(--fs-xl);
+  line-height: 1;
+}
+
+@media (min-width: 720px) {
+  .steps {
+    flex-direction: row;
+    justify-content: center;
+    align-items: flex-start;
+    gap: var(--space-8);
+  }
+
+  .step:not(:last-child)::after {
+    content: '→';
+    top: 36px;
+    bottom: auto;
+    left: auto;
+    right: calc(-1 * var(--space-8) / 2 - 0.5em);
+    transform: none;
+  }
+}

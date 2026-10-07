@@ -1,0 +1,48 @@
+/* components/leaderboard/LevelTabs.module.css */
+.tabs {
+  display: inline-flex;
+  padding: var(--space-1);
+  border: 1px solid var(--border);
+  border-radius: var(--radius-pill);
+  background: var(--bg);
+}
+
+.tab {
+  /* --lvl ang kulay ng aktibong tab, depende sa data-level */
+  --lvl: var(--cyan);
+
+  min-width: 5rem;
+  padding: var(--space-2) var(--space-4);
+  border-radius: var(--radius-pill);
+  font-size: var(--fs-sm);
+  font-weight: var(--fw-bold);
+  color: var(--text-muted);
+  transition:
+    background-color var(--dur-base) var(--ease),
+    color var(--dur-base) var(--ease);
+}
+
+.tab[data-level='easy']   { --lvl: var(--level-easy); }
+.tab[data-level='medium'] { --lvl: var(--level-medium); }
+.tab[data-level='hard']   { --lvl: var(--level-hard); }
+
+.tab:hover {
+  color: var(--text);
+}
+
+.tab[aria-selected='true'] {
+  background: var(--lvl);
+  color: var(--on-accent);
+  box-shadow: 0 0 14px color-mix(in srgb, var(--lvl) 45%, transparent);
+}
+
+@media (max-width: 719px) {
+  .tabs {
+    display: flex;
+  }
+
+  .tab {
+    flex: 1;
+    min-width: 0;
+  }
+}

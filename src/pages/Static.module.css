@@ -1,0 +1,30 @@
+/* pages/Static.module.css */
+/* Para sa /about, /privacy, /contact. Walang class ang h1 at p sa JSX, kaya .page ang pinipili. */
+.page {
+  max-width: 680px;
+  padding-block: var(--space-7) var(--space-8);
+}
+
+.page h1 {
+  margin-bottom: var(--space-5);
+  font-size: var(--fs-2xl);
+}
+
+.page p {
+  margin-bottom: var(--space-4);
+  color: var(--text-muted);
+  font-size: var(--fs-md);
+  line-height: 1.7;
+}
+
+.back {
+  display: inline-block;
+  margin-top: var(--space-4);
+  font-weight: var(--fw-bold);
+  color: var(--cyan);
+  transition: transform var(--dur-fast) var(--ease);
+}
+
+.back:hover {
+  transform: translateX(-3px);
+}
